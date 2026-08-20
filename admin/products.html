@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ürün Yönetimi | Mossyna Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="admin-sidebar">
+    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Mossyna"></a>
+    <nav class="admin-nav">
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Genel</span>
+        <a href="index.html"><span class="ic">📊</span> Dashboard</a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Mağaza</span>
+        <a href="products.html"><span class="ic">📦</span> Ürünler <span class="nav-badge hidden" data-lowstock-badge></span></a>
+        <a href="exchange-rate.html"><span class="ic">💱</span> Döviz Kuru</a>
+        <a href="hakkimizda.html"><span class="ic">🏭</span> Hakkımızda</a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Müşteri</span>
+        <a href="messages.html"><span class="ic">✉️</span> Mesajlar <span class="nav-badge hidden" data-messages-badge></span></a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Hesap</span>
+        <a href="#" data-admin-logout><span class="ic">🚪</span> Çıkış Yap</a>
+        <a href="../frontend/index.html" target="_blank"><span class="ic">🌐</span> Siteyi Görüntüle</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="flex" style="align-items:center; gap:14px;">
+        <button class="hamburger-admin">☰</button>
+        <h1 class="page-title">Ürün Yönetimi</h1>
+      </div>
+      <div class="topbar-actions">
+        <div class="admin-user">
+          <div class="avatar" data-admin-avatar>SY</div>
+          <div>
+            <div class="name" data-admin-name>Yönetici</div>
+            <div class="role" data-admin-role>Rol</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-content">
+      <div class="admin-panel">
+        <div class="admin-panel-header">
+          <h3 id="productCountLabel">Ürünler</h3>
+          <button class="btn btn-primary" id="openAddProductBtn">+ Yeni Ürün Ekle</button>
+        </div>
+        <div class="admin-panel-body" style="padding-bottom:0;">
+          <div class="table-toolbar">
+            <div class="table-filters">
+              <input type="text" id="searchInput" placeholder="Ürün adı veya SKU ara…" style="width:240px;">
+              <select id="categoryFilter">
+                <option value="all">Tüm Kategoriler</option>
+              </select>
+              <select id="statusFilter">
+                <option value="all">Tüm Durumlar</option>
+                <option value="active">Aktif</option>
+                <option value="inactive">Pasif</option>
+                <option value="low">Düşük Stok</option>
+                <option value="out">Stok Yok</option>
+              </select>
+            </div>
+            <div class="text-muted" style="font-size:.82rem;" id="resultCountLabel"></div>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Ürün</th>
+                <th>Kategori</th>
+                <th>Baz Fiyat (USD)</th>
+                <th>Satış Fiyatı (TL)</th>
+                <th>Stok</th>
+                <th>Durum</th>
+                <th>Öne Çıkan</th>
+                <th>İşlemler</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody"></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="paginationBar"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ============ ÜRÜN EKLE/DÜZENLE MODAL ============ -->
+<div class="admin-modal-overlay" id="productModalOverlay">
+  <div class="admin-modal">
+    <div class="admin-modal-header">
+      <h3 id="productModalTitle">Yeni Ürün Ekle</h3>
+      <button class="close-modal" data-close-product-modal>✕</button>
+    </div>
+    <div class="admin-modal-body">
+      <form id="productForm">
+        <input type="hidden" id="prodId">
+
+        <div class="form-group">
+          <label>Görseller</label>
+          <div class="image-upload-zone" id="imageUploadZone">
+            <div class="ic">🖼️</div>
+            <div>Görselleri sürükleyin ya da <strong>tıklayıp seçin</strong></div>
+            <div class="form-hint">Önerilen: kare (1:1), min. 800x800px, JPG/PNG</div>
+            <input type="file" id="imageInput" accept="image/*" multiple style="display:none;">
+          </div>
+          <div class="image-preview-grid" id="imagePreviewGrid"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Ürün Bilgileri (Çoklu Dil)</label>
+          <div class="lang-tabs" id="prodLangTabs">
+            <button type="button" class="lang-tab active" data-prod-lang-tab="tr">TR</button>
+            <button type="button" class="lang-tab" data-prod-lang-tab="en">EN</button>
+            <button type="button" class="lang-tab" data-prod-lang-tab="de">DE</button>
+            <button type="button" class="lang-tab" data-prod-lang-tab="fr">FR</button>
+            <button type="button" class="lang-tab" data-prod-lang-tab="ru">RU</button>
+            <button type="button" class="lang-tab" data-prod-lang-tab="ar">AR</button>
+          </div>
+          <p class="lang-tab-hint">Her sekme kendi dilindeki ürün adını ve açıklamalarını kaydeder — bir sekmeyi boş bırakırsan, sitede o dil için otomatik olarak Türkçe gösterilir.</p>
+
+          <div class="lang-tab-panel" data-prod-lang-panel="tr">
+            <div class="form-group"><label>Ürün Adı</label><input type="text" id="prodNameTr" required></div>
+            <div class="form-group"><label>Kısa Açıklama</label><input type="text" id="prodShortDescTr" maxlength="500" placeholder="Ürün kartlarında görünen kısa özet"></div>
+            <div class="form-group"><label>Detaylı Açıklama</label><textarea id="prodDescTr" rows="3" placeholder="Ürün sayfasında görünen uzun açıklama"></textarea></div>
+          </div>
+          <div class="lang-tab-panel hidden" data-prod-lang-panel="en">
+            <div class="form-group"><label>Product Name</label><input type="text" id="prodNameEn" required></div>
+            <div class="form-group"><label>Short Description</label><input type="text" id="prodShortDescEn" maxlength="500"></div>
+            <div class="form-group"><label>Full Description</label><textarea id="prodDescEn" rows="3"></textarea></div>
+          </div>
+          <div class="lang-tab-panel hidden" data-prod-lang-panel="de">
+            <div class="form-group"><label>Produktname</label><input type="text" id="prodNameDe" placeholder="Boş bırakılırsa Türkçe adı gösterilir"></div>
+            <div class="form-group"><label>Kurzbeschreibung</label><input type="text" id="prodShortDescDe" maxlength="500"></div>
+            <div class="form-group"><label>Ausführliche Beschreibung</label><textarea id="prodDescDe" rows="3"></textarea></div>
+          </div>
+          <div class="lang-tab-panel hidden" data-prod-lang-panel="fr">
+            <div class="form-group"><label>Nom du produit</label><input type="text" id="prodNameFr" placeholder="Boş bırakılırsa Türkçe adı gösterilir"></div>
+            <div class="form-group"><label>Description courte</label><input type="text" id="prodShortDescFr" maxlength="500"></div>
+            <div class="form-group"><label>Description complète</label><textarea id="prodDescFr" rows="3"></textarea></div>
+          </div>
+          <div class="lang-tab-panel hidden" data-prod-lang-panel="ru">
+            <div class="form-group"><label>Название товара</label><input type="text" id="prodNameRu" placeholder="Boş bırakılırsa Türkçe adı gösterilir"></div>
+            <div class="form-group"><label>Краткое описание</label><input type="text" id="prodShortDescRu" maxlength="500"></div>
+            <div class="form-group"><label>Полное описание</label><textarea id="prodDescRu" rows="3"></textarea></div>
+          </div>
+          <div class="lang-tab-panel hidden" data-prod-lang-panel="ar">
+            <div class="form-group"><label>اسم المنتج</label><input type="text" id="prodNameAr" placeholder="Boş bırakılırsa Türkçe adı gösterilir"></div>
+            <div class="form-group"><label>وصف قصير</label><input type="text" id="prodShortDescAr" maxlength="500"></div>
+            <div class="form-group"><label>وصف كامل</label><textarea id="prodDescAr" rows="3"></textarea></div>
+          </div>
+        </div>
+
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>SKU</label>
+            <input type="text" id="prodSku" required placeholder="MSY-YAT-0001">
+          </div>
+          <div class="form-group">
+            <label>Kategori</label>
+            <select id="prodCategory">
+              <option value="">Kategori Seçin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Shopify Variant ID</label>
+            <input type="text" id="prodShopifyVariantId" placeholder="gid://shopify/ProductVariant/xxxx">
+          </div>
+        </div>
+        <p class="form-hint" style="margin-top:-10px; margin-bottom:16px;">Shopify Variant ID, ödeme sırasında bu ürünü Shopify mağazanızdaki karşılığına eşlemek için kullanılır — Shopify panelinizden kopyalayıp buraya yapıştırın. <strong>Bu alan boşsa, müşteri bu ürünü sepete ekleyip ödemeye geçtiğinde hata alır</strong> — ödeme açılmadan önce mutlaka doldurulmalıdır.</p>
+
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>Baz Fiyat (USD)</label>
+            <div class="input-prefix"><span>$</span><input type="number" id="prodBaseUsd" step="0.01" min="0" required></div>
+          </div>
+          <div class="form-group">
+            <label>Kâr Marjı (%)</label>
+            <input type="number" id="prodMargin" step="1" min="0" value="40" required>
+          </div>
+          <div class="form-group">
+            <label>Satış Fiyatı (TL, otomatik)</label>
+            <div class="input-prefix"><span>₺</span><input type="text" id="prodPriceTryPreview" readonly style="background:var(--cream-50); font-weight:700;"></div>
+          </div>
+        </div>
+        <p class="form-hint" style="margin-top:-10px; margin-bottom:16px;">Satış fiyatı = Baz Fiyat × Güncel Kur × (1 + Kâr Marjı). Güncel kur: <strong id="currentRateLabel">–</strong>. Kur, Döviz Kuru modülünden yönetilir.</p>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Stok Adedi</label>
+            <input type="number" id="prodStock" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>Düşük Stok Eşiği</label>
+            <input type="number" id="prodLowStock" min="0" value="5" required>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <label class="toggle-switch"><input type="checkbox" id="prodActive" checked><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Sitede Yayında (Aktif)</span>
+        </div>
+        <div class="toggle-row">
+          <label class="toggle-switch"><input type="checkbox" id="prodFeatured"><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Öne Çıkan Ürün</span>
+        </div>
+        <div class="toggle-row">
+          <label class="toggle-switch"><input type="checkbox" id="prodB2b" checked><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Kurumsal (B2B) Satışa Açık</span>
+        </div>
+      </form>
+    </div>
+    <div class="admin-modal-footer">
+      <button class="btn btn-outline" data-close-product-modal>Vazgeç</button>
+      <button class="btn btn-primary" id="saveProductBtn">Ürünü Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/env.js"></script>
+<script src="js/api.js"></script>
+<script src="js/admin-data.js"></script>
+<script src="js/admin-auth.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/products-admin.js"></script>
+</body>
+</html>

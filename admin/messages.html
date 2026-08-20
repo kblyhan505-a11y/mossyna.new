@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mesajlar | Mossyna Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="admin-sidebar">
+    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Mossyna"></a>
+    <nav class="admin-nav">
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Genel</span>
+        <a href="index.html"><span class="ic">📊</span> Dashboard</a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Mağaza</span>
+        <a href="products.html"><span class="ic">📦</span> Ürünler <span class="nav-badge hidden" data-lowstock-badge></span></a>
+        <a href="exchange-rate.html"><span class="ic">💱</span> Döviz Kuru</a>
+        <a href="hakkimizda.html"><span class="ic">🏭</span> Hakkımızda</a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Müşteri</span>
+        <a href="messages.html"><span class="ic">✉️</span> Mesajlar <span class="nav-badge hidden" data-messages-badge></span></a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Hesap</span>
+        <a href="#" data-admin-logout><span class="ic">🚪</span> Çıkış Yap</a>
+        <a href="../frontend/index.html" target="_blank"><span class="ic">🌐</span> Siteyi Görüntüle</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="flex" style="align-items:center; gap:14px;">
+        <button class="hamburger-admin">☰</button>
+        <h1 class="page-title">İletişim Mesajları</h1>
+      </div>
+      <div class="topbar-actions">
+        <div class="admin-user">
+          <div class="avatar" data-admin-avatar>SY</div>
+          <div>
+            <div class="name" data-admin-name>Yönetici</div>
+            <div class="role" data-admin-role>Rol</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-content">
+      <div class="admin-panel">
+        <div class="admin-panel-header">
+          <h3>Gelen Kutusu</h3>
+          <div class="table-filters">
+            <select id="msgStatusFilter">
+              <option value="all">Tüm Durumlar</option>
+              <option value="new">Yeni</option>
+              <option value="read">Okundu</option>
+              <option value="replied">Cevaplandı</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="split-panel">
+          <div class="split-list" id="messageList"></div>
+          <div class="split-detail" id="messageDetail">
+            <div class="empty-state">
+              <div class="ic">✉️</div>
+              <p>Görüntülemek için soldan bir mesaj seçin.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="js/env.js"></script>
+<script src="js/api.js"></script>
+<script src="js/admin-data.js"></script>
+<script src="js/admin-auth.js"></script>
+<script src="js/admin.js"></script>
+<script>
+  let selectedMessageId = null;
+  let msgStatusFilter = "all";
+  let mossynaMessagesCache = [];
+
+  async function fetchMessages() {
+    const query = msgStatusFilter !== "all" ? `?status=${msgStatusFilter}` : "";
+    try {
+      mossynaMessagesCache = await mossynaAdminApi.get(`/api/admin/messages${query}`);
+    } catch (err) {
+      mossynaMessagesCache = [];
+      mossynaAdminShowToast(err.message, true);
+    }
+  }
+
+  function renderMessageList() {
+    const messages = mossynaMessagesCache.slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    const listEl = document.getElementById("messageList");
+    if (!messages.length) {
+      listEl.innerHTML = `<div class="empty-state"><div class="ic">📭</div><p>Mesaj bulunamadı.</p></div>`;
+      return;
+    }
+
+    listEl.innerHTML = messages.map(m => `
+      <div class="split-list-item ${m.id === selectedMessageId ? 'active' : ''}" data-msg-id="${m.id}">
+        <div class="msg-top">
+          <span class="msg-name">${m.name}</span>
+          <span class="msg-date">${new Date(m.created_at).toLocaleDateString("tr-TR", { day: "2-digit", month: "short" })}</span>
+        </div>
+        <div class="msg-subject">${m.subject || "(Konu belirtilmemiş)"}</div>
+        <div class="msg-preview">${m.message}</div>
+        <div style="margin-top:8px;"><span class="status-pill ${m.status}">${m.status === "new" ? "Yeni" : m.status === "read" ? "Okundu" : "Cevaplandı"}</span></div>
+      </div>
+    `).join("");
+  }
+
+  function renderMessageDetailHTML(msg) {
+    const detailEl = document.getElementById("messageDetail");
+    detailEl.innerHTML = `
+      <div class="flex-between" style="margin-bottom:18px; align-items:flex-start;">
+        <div>
+          <h3 style="margin-bottom:4px;">${msg.subject || "(Konu belirtilmemiş)"}</h3>
+          <div class="text-muted" style="font-size:.84rem;">
+            <strong>${msg.name}</strong> — ${msg.email}${msg.phone ? " — " + msg.phone : ""}
+          </div>
+          <div class="text-muted" style="font-size:.78rem; margin-top:2px;">${mossynaAdminFormatDate(msg.created_at)}</div>
+        </div>
+        <span class="status-pill ${msg.status}">${msg.status === "new" ? "Yeni" : msg.status === "read" ? "Okundu" : "Cevaplandı"}</span>
+      </div>
+
+      <div style="background:var(--cream-50); border-radius:var(--radius-md); padding:16px 18px; margin-bottom:20px; font-size:.9rem; line-height:1.6;">
+        ${msg.message}
+      </div>
+
+      ${msg.admin_reply ? `
+        <div style="border-left:3px solid var(--moss-700); padding:12px 16px; background:var(--moss-100); border-radius:0 var(--radius-sm) var(--radius-sm) 0; margin-bottom:20px;">
+          <strong style="font-size:.82rem; color:var(--moss-800);">Yönetici Yanıtı</strong>
+          <p style="margin:6px 0 0; font-size:.88rem;">${msg.admin_reply}</p>
+        </div>
+      ` : ""}
+
+      <div class="form-group">
+        <label>${msg.admin_reply ? "Yanıtı Güncelle" : "Yanıtla"}</label>
+        <textarea id="replyTextarea" rows="4" placeholder="Müşteriye yanıtınızı yazın…">${msg.admin_reply || ""}</textarea>
+      </div>
+      <div class="flex gap-8">
+        <button class="btn btn-primary" id="sendReplyBtn">Yanıtı Gönder</button>
+      </div>
+    `;
+
+    document.getElementById("sendReplyBtn").addEventListener("click", async () => {
+      const text = document.getElementById("replyTextarea").value.trim();
+      if (!text) { mossynaAdminShowToast("Lütfen bir yanıt yazın.", true); return; }
+      const btn = document.getElementById("sendReplyBtn");
+      btn.disabled = true;
+      try {
+        const updated = await mossynaAdminApi.post(`/api/admin/messages/${msg.id}/reply`, { reply: text });
+        mossynaAdminShowToast("Yanıt kaydedildi. (Not: gerçek sistemde bu, müşteriye e-posta bildirimi de tetikler.)");
+        await fetchMessages();
+        renderMessageList();
+        const fresh = mossynaMessagesCache.find(m => m.id === updated.id) || updated;
+        renderMessageDetailHTML(fresh);
+      } catch (err) {
+        mossynaAdminShowToast(err.message, true);
+        btn.disabled = false;
+      }
+    });
+  }
+
+  async function selectMessage(id) {
+    selectedMessageId = id;
+    renderMessageList();
+
+    let msg = mossynaMessagesCache.find(m => m.id === id);
+    if (!msg) {
+      document.getElementById("messageDetail").innerHTML = `<div class="empty-state"><div class="ic">✉️</div><p>Görüntülemek için soldan bir mesaj seçin.</p></div>`;
+      return;
+    }
+
+    // Okunmamışsa okundu işaretle
+    if (msg.status === "new") {
+      try {
+        msg = await mossynaAdminApi.post(`/api/admin/messages/${id}/read`);
+        const idx = mossynaMessagesCache.findIndex(m => m.id === id);
+        if (idx > -1) mossynaMessagesCache[idx] = msg;
+        renderMessageList();
+      } catch (err) {
+        mossynaAdminShowToast(err.message, true);
+      }
+    }
+
+    renderMessageDetailHTML(msg);
+  }
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    if (!mossynaAdminIsLoggedIn()) return;
+    await fetchMessages();
+    renderMessageList();
+
+    document.getElementById("messageList").addEventListener("click", (e) => {
+      const item = e.target.closest("[data-msg-id]");
+      if (!item) return;
+      selectMessage(Number(item.getAttribute("data-msg-id")));
+    });
+
+    document.getElementById("msgStatusFilter").addEventListener("change", async (e) => {
+      msgStatusFilter = e.target.value;
+      await fetchMessages();
+      renderMessageList();
+    });
+  });
+</script>
+</body>
+</html>

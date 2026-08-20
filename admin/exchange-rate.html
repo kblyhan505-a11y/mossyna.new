@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Döviz Kuru Modülü | Mossyna Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="admin-sidebar">
+    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Mossyna"></a>
+    <nav class="admin-nav">
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Genel</span>
+        <a href="index.html"><span class="ic">📊</span> Dashboard</a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Mağaza</span>
+        <a href="products.html"><span class="ic">📦</span> Ürünler <span class="nav-badge hidden" data-lowstock-badge></span></a>
+        <a href="exchange-rate.html"><span class="ic">💱</span> Döviz Kuru</a>
+        <a href="hakkimizda.html"><span class="ic">🏭</span> Hakkımızda</a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Müşteri</span>
+        <a href="messages.html"><span class="ic">✉️</span> Mesajlar <span class="nav-badge hidden" data-messages-badge></span></a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Hesap</span>
+        <a href="#" data-admin-logout><span class="ic">🚪</span> Çıkış Yap</a>
+        <a href="../frontend/index.html" target="_blank"><span class="ic">🌐</span> Siteyi Görüntüle</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="flex" style="align-items:center; gap:14px;">
+        <button class="hamburger-admin">☰</button>
+        <h1 class="page-title">Döviz Kuru Modülü</h1>
+      </div>
+      <div class="topbar-actions">
+        <div class="admin-user">
+          <div class="avatar" data-admin-avatar>SY</div>
+          <div>
+            <div class="name" data-admin-name>Yönetici</div>
+            <div class="role" data-admin-role>Rol</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-content">
+
+      <div class="rate-card-grid">
+        <div class="rate-card">
+          <div class="rate-currency">USD / TRY</div>
+          <div class="rate-value" id="usdRateValue">–</div>
+          <div class="rate-meta" id="usdRateMeta">Yükleniyor…</div>
+        </div>
+        <div class="rate-card">
+          <div class="rate-currency">EUR / TRY</div>
+          <div class="rate-value" id="eurRateValue">–</div>
+          <div class="rate-meta" id="eurRateMeta">Yükleniyor…</div>
+        </div>
+      </div>
+
+      <div class="admin-panel">
+        <div class="admin-panel-header">
+          <h3>Kur Güncelleme</h3>
+        </div>
+        <div class="admin-panel-body">
+          <p class="text-muted" style="font-size:.88rem; max-width:640px;">
+            Kur bilgisi TCMB (Türkiye Cumhuriyet Merkez Bankası) döviz kurları servisinden veya yedek olarak
+            harici bir Forex API'sinden otomatik çekilir (bkz. <code>docs/architecture.md</code> §5 ve Aşama 5
+            backend'indeki <code>currency_service.py</code>). Güncelleme, aktif tüm ürünlerin <code>price_try</code>
+            alanını yeniden hesaplar — <strong>price_override = true</strong> işaretli ürünler bu işlemden etkilenmez.
+          </p>
+
+          <div class="toggle-row">
+            <label class="toggle-switch"><input type="checkbox" id="autoUpdateToggle" checked><span class="toggle-slider"></span></label>
+            <span class="toggle-label">Kuru her gün otomatik güncelle (09:00)</span>
+          </div>
+
+          <button class="btn btn-primary" id="fetchRateBtn">🔄 Kuru Şimdi Güncelle</button>
+          <span class="form-hint" id="fetchStatusLabel" style="margin-left:10px;"></span>
+
+          <div id="impactPreview" class="hidden" style="margin-top:20px; background:var(--cream-50); border-radius:var(--radius-md); padding:16px 18px;">
+            <strong style="font-size:.88rem;">Fiyat Etkisi Önizlemesi</strong>
+            <p class="text-muted" style="font-size:.82rem; margin:6px 0 0;" id="impactSummary"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-panel">
+        <div class="admin-panel-header">
+          <h3>Manuel Kur Girişi</h3>
+        </div>
+        <div class="admin-panel-body">
+          <div class="form-row-2">
+            <div class="form-group">
+              <label>USD / TRY</label>
+              <div class="input-prefix"><span>₺</span><input type="number" id="manualUsdInput" step="0.01" min="0"></div>
+            </div>
+            <div class="form-group">
+              <label>EUR / TRY</label>
+              <div class="input-prefix"><span>₺</span><input type="number" id="manualEurInput" step="0.01" min="0"></div>
+            </div>
+          </div>
+          <button class="btn btn-outline" id="saveManualRateBtn">Manuel Kuru Kaydet ve Uygula</button>
+          <p class="form-hint mt-16">Manuel giriş, TCMB senkronizasyonu geçici olarak erişilemez olduğunda kullanılır.</p>
+        </div>
+      </div>
+
+      <div class="admin-panel">
+        <div class="admin-panel-header">
+          <h3>Kur Geçmişi</h3>
+        </div>
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead><tr><th>Para Birimi</th><th>Kur</th><th>Kaynak</th><th>Tarih</th></tr></thead>
+            <tbody id="rateHistoryBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="js/env.js"></script>
+<script src="js/api.js"></script>
+<script src="js/admin-data.js"></script>
+<script src="js/admin-auth.js"></script>
+<script src="js/admin.js"></script>
+<script>
+  let mossynaRateHistoryCache = [];
+
+  function renderRateCards() {
+    const latest = (cur) => mossynaRateHistoryCache
+      .filter(r => r.currency_code === cur)
+      .sort((a, b) => new Date(b.fetched_at) - new Date(a.fetched_at))[0];
+    const usd = latest("USD");
+    const eur = latest("EUR");
+
+    if (usd) {
+      document.getElementById("usdRateValue").textContent = "₺" + usd.rate_to_try.toFixed(2);
+      document.getElementById("usdRateMeta").textContent = `Kaynak: ${usd.source} • ${mossynaAdminFormatDate(usd.fetched_at)}`;
+    }
+    if (eur) {
+      document.getElementById("eurRateValue").textContent = "₺" + eur.rate_to_try.toFixed(2);
+      document.getElementById("eurRateMeta").textContent = `Kaynak: ${eur.source} • ${mossynaAdminFormatDate(eur.fetched_at)}`;
+    }
+  }
+
+  function renderRateHistory() {
+    const history = mossynaRateHistoryCache.slice().sort((a, b) => new Date(b.fetched_at) - new Date(a.fetched_at));
+    document.getElementById("rateHistoryBody").innerHTML = history.map(r => `
+      <tr>
+        <td><strong>${r.currency_code}</strong></td>
+        <td>₺${r.rate_to_try.toFixed(4)}</td>
+        <td>${r.source}</td>
+        <td>${mossynaAdminFormatDate(r.fetched_at)}</td>
+      </tr>
+    `).join("") || `<tr><td colspan="4" class="text-center text-muted">Henüz kur verisi yok.</td></tr>`;
+  }
+
+  async function mossynaLoadRateHistory() {
+    try {
+      mossynaRateHistoryCache = await mossynaAdminApi.get("/api/admin/exchange-rate/history?limit=20");
+    } catch (err) {
+      mossynaRateHistoryCache = [];
+      mossynaAdminShowToast(err.message, true);
+    }
+    renderRateCards();
+    renderRateHistory();
+  }
+
+  function showImpact(result) {
+    const impactBox = document.getElementById("impactPreview");
+    const avgDelta = result.average_price_change_percent.toFixed(2);
+    document.getElementById("impactSummary").textContent =
+      `${result.products_updated} ürünün satış fiyatı yeniden hesaplandı (ortalama değişim: ${avgDelta >= 0 ? "+" : ""}${avgDelta}%). price_override=true işaretli ürünler değiştirilmedi.`;
+    impactBox.classList.remove("hidden");
+  }
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    if (!mossynaAdminIsLoggedIn()) return;
+    await mossynaLoadRateHistory();
+
+    document.getElementById("fetchRateBtn").addEventListener("click", async () => {
+      const btn = document.getElementById("fetchRateBtn");
+      const statusLabel = document.getElementById("fetchStatusLabel");
+      btn.disabled = true;
+      statusLabel.textContent = "TCMB servisinden kur çekiliyor…";
+
+      try {
+        const result = await mossynaAdminApi.post("/api/admin/exchange-rate/refresh");
+        await mossynaLoadRateHistory();
+        showImpact(result);
+        statusLabel.textContent = "Kur başarıyla güncellendi ✓";
+        mossynaAdminShowToast("Döviz kuru güncellendi ve ürün fiyatlarına yansıtıldı.");
+      } catch (err) {
+        statusLabel.textContent = "";
+        mossynaAdminShowToast(err.message, true);
+      } finally {
+        btn.disabled = false;
+        setTimeout(() => statusLabel.textContent = "", 4000);
+      }
+    });
+
+    document.getElementById("saveManualRateBtn").addEventListener("click", async () => {
+      const usd = parseFloat(document.getElementById("manualUsdInput").value);
+      const eur = parseFloat(document.getElementById("manualEurInput").value);
+      if (isNaN(usd) || isNaN(eur) || usd <= 0 || eur <= 0) {
+        mossynaAdminShowToast("Lütfen geçerli kur değerleri girin.", true);
+        return;
+      }
+      const btn = document.getElementById("saveManualRateBtn");
+      btn.disabled = true;
+      try {
+        const result = await mossynaAdminApi.post("/api/admin/exchange-rate/manual", { usd_rate: usd, eur_rate: eur });
+        await mossynaLoadRateHistory();
+        showImpact(result);
+        mossynaAdminShowToast("Manuel kur kaydedildi ve fiyatlara uygulandı.");
+        document.getElementById("manualUsdInput").value = "";
+        document.getElementById("manualEurInput").value = "";
+      } catch (err) {
+        mossynaAdminShowToast(err.message, true);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  });
+</script>
+</body>
+</html>

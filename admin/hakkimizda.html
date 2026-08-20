@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hakkımızda Fotoğrafları | Mossyna Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="admin-sidebar">
+    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Mossyna"></a>
+    <nav class="admin-nav">
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Genel</span>
+        <a href="index.html"><span class="ic">📊</span> Dashboard</a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Mağaza</span>
+        <a href="products.html"><span class="ic">📦</span> Ürünler <span class="nav-badge hidden" data-lowstock-badge></span></a>
+        <a href="exchange-rate.html"><span class="ic">💱</span> Döviz Kuru</a>
+        <a href="hakkimizda.html"><span class="ic">🏭</span> Hakkımızda</a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Müşteri</span>
+        <a href="messages.html"><span class="ic">✉️</span> Mesajlar <span class="nav-badge hidden" data-messages-badge></span></a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Hesap</span>
+        <a href="#" data-admin-logout><span class="ic">🚪</span> Çıkış Yap</a>
+        <a href="../frontend/index.html" target="_blank"><span class="ic">🌐</span> Siteyi Görüntüle</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="flex" style="align-items:center; gap:14px;">
+        <button class="hamburger-admin">☰</button>
+        <h1 class="page-title">Hakkımızda Fotoğrafları</h1>
+      </div>
+      <div class="topbar-actions">
+        <div class="admin-user">
+          <div class="avatar" data-admin-avatar>SY</div>
+          <div>
+            <div class="name" data-admin-name>Yönetici</div>
+            <div class="role" data-admin-role>Rol</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-content">
+
+      <div class="admin-panel">
+        <div class="admin-panel-header">
+          <h3>Fotoğraf Yükle</h3>
+        </div>
+        <div class="admin-panel-body">
+          <div class="form-group" style="margin-bottom:0;">
+            <div class="image-upload-zone" id="aboutUploadZone">
+              <div class="ic">🖼️</div>
+              <div>Üretim tesisi fotoğraflarını sürükleyin ya da <strong>tıklayıp seçin</strong></div>
+              <div class="form-hint">Fotoğraflar otomatik olarak 4:3 oranında, standart boyuta kırpılır ve hemen kaydedilir — anasayfadaki "Hakkımızda" bölümünde yayınlanır. Birden fazla fotoğraf birden seçebilirsiniz.</div>
+              <input type="file" id="aboutImageInput" accept="image/*" multiple style="display:none;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-panel">
+        <div class="admin-panel-header">
+          <h3 id="aboutPhotoCountLabel">Fotoğraflar (0)</h3>
+        </div>
+        <div class="admin-panel-body">
+          <p class="form-hint" style="margin-top:-6px;">Açıklama alanlarına yazdığınız metin, alandan çıktığınızda (başka bir yere tıkladığınızda) otomatik kaydedilir — ayrı bir "Kaydet" butonuna gerek yoktur.</p>
+          <div id="aboutPhotoEmptyState" class="empty-state">
+            <div class="ic">🏭</div>
+            <div>Henüz fotoğraf eklenmedi. Yukarıdan üretim tesisi fotoğraflarınızı yükleyerek başlayın.</div>
+          </div>
+          <div class="crop-preview-grid hidden" id="aboutPhotoGrid"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="js/env.js"></script>
+<script src="js/api.js"></script>
+<script src="js/admin-auth.js"></script>
+<script src="js/admin.js"></script>
+<script src="js/hakkimizda-admin.js"></script>
+</body>
+</html>

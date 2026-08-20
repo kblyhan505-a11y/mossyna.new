@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yönetici Girişi | Mossyna Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+<style>
+  body { background: var(--moss-900); }
+  .admin-login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .admin-login-card {
+    background: #fff; border-radius: var(--radius-lg); padding: 44px 40px; width: 100%; max-width: 400px;
+    box-shadow: var(--shadow-lg);
+  }
+  .admin-login-card .logo { display: block; text-align: center; margin-bottom: 8px; }
+  .admin-login-card .logo img { height: 56px; width: auto; margin: 0 auto; }
+  .admin-login-card .logo-tag { display: block; text-align: center; font-size: .78rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--moss-700); margin-bottom: 8px; }
+  .admin-login-card .subtitle { text-align: center; color: var(--text-muted); font-size: .86rem; margin-bottom: 28px; }
+  .admin-login-error {
+    display: none; background: var(--danger-bg); color: var(--danger); padding: 10px 14px;
+    border-radius: var(--radius-sm); font-size: .82rem; margin-bottom: 16px;
+  }
+  .demo-hint { margin-top: 20px; text-align: center; font-size: .76rem; color: var(--text-muted); background: var(--cream-50); padding: 10px; border-radius: var(--radius-sm); }
+</style>
+</head>
+<body>
+
+<div class="admin-login-wrap">
+  <div class="admin-login-card">
+    <span class="logo"><img src="assets/logo.png" alt="Mossyna"></span>
+    <span class="logo-tag">Yönetici Paneli</span>
+    <p class="subtitle">Yönetici paneline erişmek için giriş yapın</p>
+
+    <div class="admin-login-error" id="adminLoginError"></div>
+
+    <form id="adminLoginForm">
+      <div class="form-group">
+        <label>Kullanıcı Adı / E-posta</label>
+        <input type="text" id="adminUsername" required autocomplete="username" placeholder="admin@mossyna.com">
+      </div>
+      <div class="form-group">
+        <label>Şifre</label>
+        <input type="password" id="adminPassword" required autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%; padding:12px;">Giriş Yap</button>
+    </form>
+
+    <div class="demo-hint">Hesabınız yoksa backend üzerinde <code>python -m app.scripts.seed</code> komutuyla bir süper yönetici hesabı oluşturabilirsiniz (bkz. KURULUM_REHBERI.md).</div>
+
+    <p class="text-center mt-16"><a href="../frontend/index.html" style="font-size:.82rem; color:var(--text-muted);">← Siteye dön</a></p>
+  </div>
+</div>
+
+<script src="js/env.js"></script>
+<script src="js/api.js"></script>
+<script src="js/admin-auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sepet & Ödeme | Mossyna</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="header-main container">
+    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Mossyna"></a>
+    <nav class="main-nav">
+      <a href="index.html" data-i18n="nav.home"></a>
+      <a href="products.html" data-i18n="nav.products"></a>
+    </nav>
+    <div class="header-actions">
+      <div class="lang-switch">
+        <button data-lang="tr">TR</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="de">DE</button>
+        <button data-lang="fr">FR</button>
+        <button data-lang="ru">RU</button>
+        <button data-lang="ar">AR</button>
+      </div>
+      <div class="secure-note" style="margin:0;">🔒 SSL</div>
+    </div>
+  </div>
+</header>
+
+<section class="container section">
+  <h1 data-i18n="checkout.pagetitle" style="font-size:1.8rem;"></h1>
+
+  <div class="checkout-layout">
+    <!-- ============ LEFT: FORM STEPS ============ -->
+    <div>
+      <form id="checkoutForm">
+
+        <!-- Sipariş oluşturma hatası (varsa) -->
+        <div id="checkoutErrorBanner" class="hidden" style="background:#fdecea; border:1px solid var(--danger); color:var(--danger); border-radius:var(--radius-md); padding:12px 16px; margin-bottom:20px; font-size:.9rem;"></div>
+
+        <!-- Misafir e-posta (giriş yapılmamışsa gösterilir) -->
+        <div class="checkout-card" id="guestEmailCard">
+          <div class="form-group" style="margin-bottom:0;">
+            <label data-i18n="checkout.email"></label>
+            <input type="email" id="guestEmail" autocomplete="email">
+            <p class="form-hint" data-i18n="checkout.guestemail.hint"></p>
+            <div class="field-error"></div>
+          </div>
+        </div>
+
+        <!-- Step 1: Shipping -->
+        <div class="checkout-card">
+          <h3><span class="step-badge">1</span><span data-i18n="checkout.step1"></span></h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label data-i18n="checkout.fullname"></label>
+              <input type="text" id="shipFullName" required>
+            </div>
+            <div class="form-group">
+              <label data-i18n="checkout.phone"></label>
+              <input type="tel" id="shipPhone" required placeholder="+90 5xx xxx xx xx">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label data-i18n="checkout.city"></label>
+              <input type="text" id="shipCity" required>
+            </div>
+            <div class="form-group">
+              <label data-i18n="checkout.district"></label>
+              <input type="text" id="shipDistrict" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label data-i18n="checkout.address"></label>
+            <textarea rows="3" id="shipAddress" required></textarea>
+          </div>
+          <div class="form-group">
+            <label data-i18n="checkout.postal"></label>
+            <input type="text" id="shipPostal">
+          </div>
+        </div>
+
+        <!-- Step 2: Billing -->
+        <div class="checkout-card">
+          <h3><span class="step-badge">2</span><span data-i18n="checkout.step2"></span></h3>
+
+          <div class="role-toggle">
+            <input type="radio" name="billingType" id="billIndividual" value="individual" checked>
+            <label for="billIndividual" data-i18n="checkout.billing.individual"></label>
+            <input type="radio" name="billingType" id="billCorporate" value="corporate">
+            <label for="billCorporate" data-i18n="checkout.billing.corporate"></label>
+          </div>
+
+          <div id="corporateFields" class="hidden">
+            <div class="form-group">
+              <label data-i18n="checkout.company"></label>
+              <input type="text" id="billCompanyName">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label data-i18n="checkout.taxoffice"></label>
+                <input type="text" id="billTaxOffice">
+              </div>
+              <div class="form-group">
+                <label data-i18n="checkout.taxnumber"></label>
+                <input type="text" id="billTaxNumber">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Payment -->
+        <div class="checkout-card">
+          <h3><span class="step-badge">3</span><span data-i18n="checkout.step3"></span></h3>
+
+          <div class="payment-tabs">
+            <div class="payment-tab active" data-pay-tab="card">💳 <span data-i18n="checkout.paymethod.card"></span></div>
+            <div class="payment-tab" data-pay-tab="transfer">🏦 <span data-i18n="checkout.paymethod.transfer"></span></div>
+          </div>
+
+          <div id="cardPanel">
+            <div class="card-preview" id="cardPreview" style="display:flex; align-items:center; justify-content:center; text-align:center; padding:20px; gap:8px;">
+              <span style="font-size:1.4rem;">🔒</span>
+              <span data-i18n="checkout.shopify.redirect.badge" style="font-size:.95rem; font-weight:700;"></span>
+            </div>
+            <p class="form-hint" data-i18n="checkout.shopify.redirect.desc"></p>
+          </div>
+
+          <div id="transferPanel" class="hidden">
+            <p class="form-hint" data-i18n="checkout.banktransfer.desc"></p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="checkout.ordernote"></label>
+          <textarea rows="2" id="orderNote"></textarea>
+        </div>
+      </form>
+    </div>
+
+    <!-- ============ RIGHT: ORDER SUMMARY ============ -->
+    <div class="order-summary" id="orderSummaryPanel">
+      <h3 data-i18n="checkout.summary"></h3>
+
+      <div class="currency-toggle">
+        <button data-currency="TRY" class="active">TRY ₺</button>
+        <button data-currency="USD">USD $</button>
+        <button data-currency="EUR">EUR €</button>
+      </div>
+      <p class="form-hint" style="margin-top:-8px; margin-bottom:16px;" data-i18n="checkout.currency.note"></p>
+
+      <div id="summaryItems"></div>
+
+      <div class="form-group" style="display:flex; gap:8px; margin-top:16px;">
+        <input type="text" id="couponInput" data-i18n-placeholder="checkout.couponplaceholder" style="flex:1;">
+        <button class="btn btn-outline btn-sm" id="applyCouponBtn" data-i18n="checkout.couponbtn"></button>
+      </div>
+
+      <div class="summary-line"><span data-i18n="checkout.subtotal"></span><span id="sumSubtotal">₺0,00</span></div>
+      <div class="summary-line" id="discountRow" style="display:none;"><span data-i18n="checkout.discount"></span><span id="sumDiscount">−₺0,00</span></div>
+      <div class="summary-line"><span data-i18n="checkout.shipping"></span><span id="sumShipping" data-i18n="checkout.shipping.free"></span></div>
+      <div class="summary-total"><span data-i18n="checkout.total"></span><span id="sumTotal">₺0,00</span></div>
+
+      <button type="submit" form="checkoutForm" class="btn btn-primary btn-block" style="margin-top:20px;" id="placeOrderBtn" data-i18n="checkout.placeorder"></button>
+      <div class="secure-note">🔒 <span data-i18n="checkout.securenote"></span></div>
+    </div>
+
+    <!-- ============ ORDER SUCCESS PANEL (ödeme sonrası gösterilir) ============ -->
+    <div class="order-summary hidden" id="orderSuccessPanel" style="text-align:center;">
+      <div style="font-size:2.4rem; margin-bottom:8px;">✅</div>
+      <h3 data-i18n="checkout.success.title"></h3>
+      <p class="form-hint" id="orderSuccessOrderNum" style="font-size:1rem; color:var(--text-body);"></p>
+      <p id="orderSuccessMessage" style="margin:16px 0;"></p>
+      <a href="index.html" class="btn btn-primary btn-block" data-i18n="checkout.success.backhome"></a>
+    </div>
+  </div>
+</section>
+
+<script src="js/env.js"></script>
+<script src="js/api.js"></script>
+<script src="js/products.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  /* ---------- Görüntüleme Kuru ----------
+     Gerçek kur GET /api/exchange-rate/current uzayından çekilir (Aşama 5 backend'i).
+     Backend henüz kur verisi üretmediyse (örn. zamanlayıcı hiç çalışmadıysa) yaklaşık
+     bir demo kur ile devam edilir, ancak tahsilat her zaman TL üzerinden yapılır —
+     bu değerler yalnızca görüntüleme amaçlıdır. */
+  let MOSSYNA_DISPLAY_RATES = { TRY: 1, USD: 1 / 34.20, EUR: 1 / 37.10 };
+  let mossynaCurrentCurrency = "TRY";
+  let mossynaAppliedDiscount = 0; // yüzde (yalnızca önizleme; asıl indirim sunucuda hesaplanır)
+
+  async function mossynaLoadDisplayRates() {
+    try {
+      const rates = await mossynaApi.get("/api/exchange-rate/current");
+      const next = { TRY: 1 };
+      rates.forEach(r => { next[r.currency_code] = 1 / r.rate_to_try; });
+      if (next.USD && next.EUR) MOSSYNA_DISPLAY_RATES = next;
+    } catch (err) {
+      // Kur servisine ulaşılamazsa demo kurlarla devam edilir — sessizce yoksay.
+    }
+  }
+
+  function mossynaConvert(amountTRY) {
+    return amountTRY * MOSSYNA_DISPLAY_RATES[mossynaCurrentCurrency];
+  }
+
+  function mossynaRenderSummary() {
+    const lang = mossynaGetLang();
+    const cart = mossynaGetCart();
+    const container = document.getElementById("summaryItems");
+
+    container.innerHTML = cart.length
+      ? cart.map(item => `
+          <div class="summary-line">
+            <span>${(lang === "en" ? item.nameEn : item.nameTr) || item.nameTr} × ${item.qty}</span>
+            <span>${mossynaFormatPrice(mossynaConvert(item.unitPrice * item.qty), mossynaCurrentCurrency)}</span>
+          </div>
+        `).join("")
+      : `<p class="form-hint">${mossynaT("cart.empty")}</p>`;
+
+    const subtotal = mossynaCartSubtotal();
+    const discountAmount = subtotal * (mossynaAppliedDiscount / 100);
+    const shippingFee = (subtotal - discountAmount) >= 300 || subtotal === 0 ? 0 : 49.9;
+    const total = subtotal - discountAmount + shippingFee;
+
+    document.getElementById("sumSubtotal").textContent = mossynaFormatPrice(mossynaConvert(subtotal), mossynaCurrentCurrency);
+
+    const discountRow = document.getElementById("discountRow");
+    if (mossynaAppliedDiscount > 0) {
+      discountRow.style.display = "flex";
+      document.getElementById("sumDiscount").textContent = "−" + mossynaFormatPrice(mossynaConvert(discountAmount), mossynaCurrentCurrency);
+    } else {
+      discountRow.style.display = "none";
+    }
+
+    const shippingEl = document.getElementById("sumShipping");
+    if (shippingFee === 0) {
+      shippingEl.setAttribute("data-i18n", "checkout.shipping.free");
+      shippingEl.textContent = mossynaT("checkout.shipping.free");
+    } else {
+      shippingEl.removeAttribute("data-i18n");
+      shippingEl.textContent = mossynaFormatPrice(mossynaConvert(shippingFee), mossynaCurrentCurrency);
+    }
+
+    document.getElementById("sumTotal").textContent = mossynaFormatPrice(mossynaConvert(total), mossynaCurrentCurrency);
+  }
+
+  function mossynaShowCheckoutError(message) {
+    const banner = document.getElementById("checkoutErrorBanner");
+    banner.textContent = message;
+    banner.classList.remove("hidden");
+    banner.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function mossynaHideCheckoutError() {
+    document.getElementById("checkoutErrorBanner").classList.add("hidden");
+  }
+
+  function mossynaShowOrderSuccess(order, paymentInfo) {
+    document.querySelector(".checkout-layout > div:first-child").classList.add("hidden");
+    document.getElementById("orderSummaryPanel").classList.add("hidden");
+
+    const lang = mossynaGetLang();
+    document.getElementById("orderSuccessOrderNum").textContent =
+      (lang === "tr" ? "Sipariş No: " : "Order Number: ") + order.order_number;
+
+    let message = "";
+    if (paymentInfo && paymentInfo.bank_transfer_iban) {
+      message = lang === "tr"
+        ? `Havale/EFT bilgileri: ${paymentInfo.bank_transfer_iban}. Ödemeniz onaylandığında siparişiniz işleme alınacaktır.`
+        : `Bank transfer details: ${paymentInfo.bank_transfer_iban}. Your order will be processed once payment is confirmed.`;
+    } else {
+      // Normalde Shopify'a yönlendirme burada değil, submit handler'ında (aşağıda) gerçekleşir —
+      // bu mesaj yalnızca yönlendirme bir nedenle başarısız olursa (ör. Shopify henüz
+      // yapılandırılmadıysa) yedek olarak gösterilir.
+      message = lang === "tr"
+        ? "Siparişiniz oluşturuldu, ancak güvenli ödeme sayfasına şu anda ulaşılamıyor. Ekibimiz sizinle iletişime geçecektir."
+        : "Your order was created, but the secure payment page couldn't be reached right now. Our team will contact you.";
+    }
+    document.getElementById("orderSuccessMessage").textContent = message;
+    document.getElementById("orderSuccessPanel").classList.remove("hidden");
+  }
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    await mossynaLoadDisplayRates();
+    mossynaRenderSummary();
+
+    // Giriş yapmışsa misafir e-posta alanını gizle
+    if (mossynaIsLoggedIn()) {
+      document.getElementById("guestEmailCard").classList.add("hidden");
+    }
+
+    // Kurumsal fatura alanları
+    document.querySelectorAll('input[name="billingType"]').forEach(r =>
+      r.addEventListener("change", (e) => {
+        document.getElementById("corporateFields").classList.toggle("hidden", e.target.value !== "corporate");
+      })
+    );
+
+    // Ödeme sekmeleri
+    document.querySelectorAll("[data-pay-tab]").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll("[data-pay-tab]").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        const isCard = tab.getAttribute("data-pay-tab") === "card";
+        document.getElementById("cardPanel").classList.toggle("hidden", !isCard);
+        document.getElementById("transferPanel").classList.toggle("hidden", isCard);
+      });
+    });
+
+    // Para birimi seçici
+    document.querySelectorAll("[data-currency]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-currency]").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        mossynaCurrentCurrency = btn.getAttribute("data-currency");
+        mossynaRenderSummary();
+      });
+    });
+
+    // Kupon önizleme (yalnızca ekranda gösterim amaçlı — asıl indirim sunucuda
+    // sipariş oluşturulurken discount_code ile yeniden doğrulanıp hesaplanır)
+    document.getElementById("applyCouponBtn").addEventListener("click", () => {
+      const code = document.getElementById("couponInput").value.trim().toUpperCase();
+      if (code === "WELCOME10") {
+        mossynaAppliedDiscount = 10;
+        mossynaShowToast(mossynaGetLang() === "tr" ? "Kupon uygulandı: %10 indirim (önizleme)" : "Coupon applied: 10% off (preview)");
+      } else if (code) {
+        mossynaAppliedDiscount = 0;
+        mossynaShowToast(mossynaGetLang() === "tr"
+          ? "Kupon kodu siparişi tamamlarken doğrulanacaktır."
+          : "The coupon code will be validated when you place the order.");
+      } else {
+        mossynaAppliedDiscount = 0;
+      }
+      mossynaRenderSummary();
+    });
+
+    // ---------- Sipariş Oluşturma + Ödeme Başlatma ----------
+    document.getElementById("checkoutForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      mossynaHideCheckoutError();
+
+      const cart = mossynaGetCart();
+      if (cart.length === 0) {
+        mossynaShowCheckoutError(mossynaGetLang() === "tr" ? "Sepetiniz boş." : "Your cart is empty.");
+        return;
+      }
+
+      const guestEmailInput = document.getElementById("guestEmail");
+      if (!mossynaIsLoggedIn()) {
+        mossynaClearFieldError(guestEmailInput);
+        if (!guestEmailInput.value.trim() || !mossynaIsValidEmail(guestEmailInput.value.trim())) {
+          mossynaSetFieldError(guestEmailInput, mossynaT("auth.error.email"));
+          guestEmailInput.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+      }
+
+      const form = e.target;
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const billingType = form.querySelector('input[name="billingType"]:checked')?.value || "individual";
+      const payTab = document.querySelector("[data-pay-tab].active")?.getAttribute("data-pay-tab") || "card";
+      const couponCode = document.getElementById("couponInput").value.trim();
+
+      const payload = {
+        items: cart.map(item => ({ product_id: item.productId, quantity: item.qty })),
+        shipping: {
+          full_name: document.getElementById("shipFullName").value.trim(),
+          phone: document.getElementById("shipPhone").value.trim(),
+          city: document.getElementById("shipCity").value.trim(),
+          district: document.getElementById("shipDistrict").value.trim(),
+          address_line: document.getElementById("shipAddress").value.trim(),
+          postal_code: document.getElementById("shipPostal").value.trim() || null,
+        },
+        billing: {
+          type: billingType,
+          company_name: billingType === "corporate" ? document.getElementById("billCompanyName").value.trim() : null,
+          tax_office: billingType === "corporate" ? document.getElementById("billTaxOffice").value.trim() : null,
+          tax_number: billingType === "corporate" ? document.getElementById("billTaxNumber").value.trim() : null,
+        },
+        currency: mossynaCurrentCurrency,
+        discount_code: couponCode || null,
+        customer_note: document.getElementById("orderNote").value.trim() || null,
+      };
+      if (!mossynaIsLoggedIn()) {
+        payload.guest_email = guestEmailInput.value.trim();
+      }
+
+      const submitBtn = document.getElementById("placeOrderBtn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = mossynaT("checkout.placing");
+
+      let order;
+      try {
+        order = await mossynaApi.post("/api/orders", payload, mossynaIsLoggedIn());
+      } catch (err) {
+        mossynaShowCheckoutError(err.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = mossynaT("checkout.placeorder");
+        return;
+      }
+
+      // Sipariş başarıyla oluşturuldu — sepeti temizle (fiyatlar artık sunucuda kayıtlı)
+      mossynaSaveCart([]);
+
+      // Kart ödemesi her zaman Shopify'ın barındırdığı güvenli checkout sayfasına
+      // yönlendirilerek tamamlanır — Mossyna sunucusu kart bilgisine hiç dokunmaz.
+      const provider = payTab === "transfer" ? "bank_transfer" : "shopify";
+      let paymentInfo = null;
+      try {
+        paymentInfo = await mossynaApi.post("/api/payments/initiate", { order_id: order.id, provider }, mossynaIsLoggedIn());
+      } catch (err) {
+        // Ödeme sağlayıcısına ulaşılamadı (örn. Shopify bağlantısı henüz yapılandırılmadı) —
+        // sipariş yine de oluşturuldu, kullanıcıya bilgi verip devam ediyoruz.
+        paymentInfo = null;
+      }
+
+      if (paymentInfo && paymentInfo.shopify_checkout_url) {
+        // Sipariş zaten oluşturuldu — müşteriyi Shopify'ın güvenli ödeme sayfasına
+        // gönder. Ödeme onaylandığında Shopify webhook'u siparişi "paid" olarak işaretler.
+        window.location.href = paymentInfo.shopify_checkout_url;
+        return;
+      }
+
+      mossynaShowOrderSuccess(order, paymentInfo);
+    });
+  });
+
+  document.addEventListener("mossyna:cartchange", mossynaRenderSummary);
+  document.addEventListener("mossyna:languagechange", mossynaRenderSummary);
+</script>
+
+<!-- ============ WHATSAPP CANLI DESTEK ============ -->
+<a class="whatsapp-float" href="https://wa.me/TELEFON_NO_BURAYA" target="_blank" rel="noopener" title="WhatsApp Destek" data-i18n-title="whatsapp.tooltip">
+  <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+    <path d="M16.01 3C9.38 3 4 8.38 4 15.01c0 2.35.64 4.56 1.86 6.51L4 29l7.66-1.82a12.9 12.9 0 0 0 4.35.75h.01C22.63 27.93 28 22.55 28 15.92 28 9.29 22.63 3.9 16.01 3Zm0 22.87c-1.5 0-2.97-.4-4.26-1.15l-.31-.18-4.55 1.08 1.11-4.5-.2-.32a10.55 10.55 0 0 1-1.65-5.79c0-5.83 4.75-10.58 10.6-10.58 2.83 0 5.49 1.11 7.49 3.11a10.5 10.5 0 0 1 3.1 7.47c0 5.83-4.75 10.86-10.33 10.86Zm5.79-7.93c-.32-.16-1.88-.93-2.17-1.03-.29-.11-.5-.16-.72.16-.21.32-.82 1.03-1.01 1.24-.19.21-.37.24-.69.08-.32-.16-1.34-.49-2.55-1.57-.94-.84-1.58-1.87-1.76-2.19-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.55.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.55-.08-.16-.72-1.74-.99-2.38-.26-.63-.53-.54-.72-.55l-.61-.01c-.21 0-.55.08-.84.4-.29.32-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.23 3.4 5.4 4.77.75.32 1.34.52 1.8.66.76.24 1.44.21 1.99.13.61-.09 1.88-.77 2.14-1.51.27-.74.27-1.38.19-1.51-.08-.13-.29-.21-.61-.37Z"/>
+  </svg>
+</a>
+
+<script src="js/cookie-consent.js"></script>
+</body>
+</html>

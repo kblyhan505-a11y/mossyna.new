@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yönetici Paneli | Mossyna</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="admin-sidebar">
+    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Mossyna"></a>
+    <nav class="admin-nav">
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Genel</span>
+        <a href="index.html"><span class="ic">📊</span> Dashboard</a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Mağaza</span>
+        <a href="products.html"><span class="ic">📦</span> Ürünler <span class="nav-badge hidden" data-lowstock-badge></span></a>
+        <a href="exchange-rate.html"><span class="ic">💱</span> Döviz Kuru</a>
+        <a href="hakkimizda.html"><span class="ic">🏭</span> Hakkımızda</a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Müşteri</span>
+        <a href="messages.html"><span class="ic">✉️</span> Mesajlar <span class="nav-badge hidden" data-messages-badge></span></a>
+      </div>
+      <div class="admin-nav-group">
+        <span class="admin-nav-label">Hesap</span>
+        <a href="#" data-admin-logout><span class="ic">🚪</span> Çıkış Yap</a>
+        <a href="../frontend/index.html" target="_blank"><span class="ic">🌐</span> Siteyi Görüntüle</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="flex" style="align-items:center; gap:14px;">
+        <button class="hamburger-admin">☰</button>
+        <h1 class="page-title">Dashboard</h1>
+      </div>
+      <div class="topbar-actions">
+        <div class="admin-user">
+          <div class="avatar" data-admin-avatar>SY</div>
+          <div>
+            <div class="name" data-admin-name>Yönetici</div>
+            <div class="role" data-admin-role>Rol</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-content">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-top">
+            <div>
+              <div class="stat-label">Toplam Ürün</div>
+              <div class="stat-value" id="statTotalProducts">–</div>
+            </div>
+            <div class="stat-icon">📦</div>
+          </div>
+          <span class="stat-trend up">▲ Aktif katalog</span>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div>
+              <div class="stat-label">Düşük Stok Uyarısı</div>
+              <div class="stat-value" id="statLowStock">–</div>
+            </div>
+            <div class="stat-icon" style="background:var(--warning-bg); color:var(--warning);">⚠️</div>
+          </div>
+          <span class="stat-trend down">Takip gerekiyor</span>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div>
+              <div class="stat-label">Bugünkü Sipariş (demo)</div>
+              <div class="stat-value">18</div>
+            </div>
+            <div class="stat-icon">🛒</div>
+          </div>
+          <span class="stat-trend up">▲ %12 dün'e göre</span>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <div>
+              <div class="stat-label">Okunmamış Mesaj</div>
+              <div class="stat-value" id="statNewMessages">–</div>
+            </div>
+            <div class="stat-icon" style="background:var(--info-bg); color:var(--info);">✉️</div>
+          </div>
+          <span class="stat-trend down">Yanıt bekliyor</span>
+        </div>
+      </div>
+
+      <div class="admin-panel">
+        <div class="admin-panel-header">
+          <h3>⚠️ Düşük Stoklu Ürünler</h3>
+          <a href="products.html" class="btn btn-outline btn-sm">Ürün Yönetimine Git</a>
+        </div>
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr><th>Ürün</th><th>SKU</th><th>Kategori</th><th>Stok</th><th>Durum</th></tr>
+            </thead>
+            <tbody id="lowStockTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-panel">
+        <div class="admin-panel-header">
+          <h3>✉️ Son Gelen Mesajlar</h3>
+          <a href="messages.html" class="btn btn-outline btn-sm">Tüm Mesajlar</a>
+        </div>
+        <div class="table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr><th>Gönderen</th><th>Konu</th><th>Tarih</th><th>Durum</th></tr>
+            </thead>
+            <tbody id="recentMessagesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="js/env.js"></script>
+<script src="js/api.js"></script>
+<script src="js/admin-data.js"></script>
+<script src="js/admin-auth.js"></script>
+<script src="js/admin.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    if (!mossynaAdminIsLoggedIn()) return;
+
+    await mossynaAdminFetchCategories();
+
+    let totalProducts, lowStockItems, newMessagesCount, recentMessages;
+    try {
+      const [allProducts, lowStock, newMessages, recent] = await Promise.all([
+        mossynaAdminApi.get("/api/admin/products?page_size=1"),
+        mossynaAdminApi.get("/api/admin/products?status=low&page_size=8"),
+        mossynaAdminApi.get("/api/admin/messages?status=new"),
+        mossynaAdminApi.get("/api/admin/messages"),
+      ]);
+      totalProducts = allProducts.total;
+      lowStockItems = lowStock.items;
+      newMessagesCount = newMessages.length;
+      recentMessages = recent.slice(0, 5);
+    } catch (err) {
+      mossynaAdminShowToast(err.message, true);
+      return;
+    }
+
+    document.getElementById("statTotalProducts").textContent = totalProducts;
+    document.getElementById("statLowStock").textContent = lowStockItems.length;
+    document.getElementById("statNewMessages").textContent = newMessagesCount;
+
+    document.getElementById("lowStockTableBody").innerHTML = lowStockItems.map(p => `
+      <tr>
+        <td class="prod-cell"><span class="prod-name">${p.name_tr}</span></td>
+        <td>${p.sku}</td>
+        <td>${mossynaAdminCategoryNameBySlug(p.category_slug)}</td>
+        <td>${p.stock_quantity}</td>
+        <td>${p.stock_quantity === 0
+          ? '<span class="status-pill out">Tükendi</span>'
+          : '<span class="status-pill low">Kritik</span>'}</td>
+      </tr>
+    `).join("") || `<tr><td colspan="5" class="text-center text-muted">Düşük stoklu ürün yok 🎉</td></tr>`;
+
+    document.getElementById("recentMessagesTableBody").innerHTML = recentMessages.map(m => `
+      <tr>
+        <td class="prod-cell"><span class="prod-name">${m.name}</span></td>
+        <td>${m.subject || "(Konu belirtilmemiş)"}</td>
+        <td>${mossynaAdminFormatDate(m.created_at)}</td>
+        <td><span class="status-pill ${m.status}">${m.status === "new" ? "Yeni" : m.status === "read" ? "Okundu" : "Cevaplandı"}</span></td>
+      </tr>
+    `).join("") || `<tr><td colspan="4" class="text-center text-muted">Henüz mesaj yok.</td></tr>`;
+  });
+</script>
+</body>
+</html>

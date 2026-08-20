@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mossyna | Doğal Ev Tekstili</title>
+<meta name="description" content="Mossyna — %100 doğal kumaşlardan üretilen nevresim, havlu, bornoz ve dekoratif ev tekstili ürünleri.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="announce-bar" data-i18n="announce.text"></div>
+  <div class="header-main container">
+    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Mossyna"></a>
+
+    <nav class="main-nav">
+      <a href="index.html" class="active" data-i18n="nav.home"></a>
+      <a href="products.html" data-i18n="nav.products"></a>
+      <a href="products.html?segment=corporate" data-i18n="nav.corporate"></a>
+      <a href="#about" data-i18n="nav.about"></a>
+      <a href="contact.html" data-i18n="nav.contact"></a>
+    </nav>
+
+    <div class="header-actions">
+      <div class="lang-switch">
+        <button data-lang="tr">TR</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="de">DE</button>
+        <button data-lang="fr">FR</button>
+        <button data-lang="ru">RU</button>
+        <button data-lang="ar">AR</button>
+      </div>
+      <a href="login.html" class="icon-btn" data-account-link title="Hesabım">👤</a>
+      <button class="icon-btn" data-open-cart title="Sepetim">
+        🛍️<span class="cart-badge">0</span>
+      </button>
+      <button class="hamburger">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero container" style="max-width:100%;">
+  <div class="hero-content">
+    <div class="hero-logo-lockup"><img src="assets/logo.png" alt="Mossyna"></div>
+    <span class="eyebrow" data-i18n="hero.eyebrow"></span>
+    <h1 data-i18n="hero.title"></h1>
+    <p data-i18n="hero.desc"></p>
+    <div class="hero-btn-group">
+      <a href="products.html" class="btn btn-gold" data-i18n="hero.cta.shop"></a>
+      <a href="login.html?role=corporate" class="btn btn-outline" style="border-color:#fff; color:#fff;" data-i18n="hero.cta.corporate"></a>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="https://placehold.co/560x640/e4ede7/1a5c40?text=Mossyna+Home" alt="Mossyna Ev Tekstili">
+  </div>
+</section>
+
+<!-- ============ TRUST STRIP ============ -->
+<div class="container">
+  <div class="trust-strip">
+    <div class="trust-item"><div class="ic">🌿</div><h4 data-i18n="trust.natural.title"></h4><p data-i18n="trust.natural.desc"></p></div>
+    <div class="trust-item"><div class="ic">🚚</div><h4 data-i18n="trust.shipping.title"></h4><p data-i18n="trust.shipping.desc"></p></div>
+    <div class="trust-item"><div class="ic">🔒</div><h4 data-i18n="trust.secure.title"></h4><p data-i18n="trust.secure.desc"></p></div>
+    <div class="trust-item"><div class="ic">💬</div><h4 data-i18n="trust.support.title"></h4><p data-i18n="trust.support.desc"></p></div>
+  </div>
+</div>
+
+<!-- ============ PILLOW SHOW: Scroll Animasyonu (GSAP) ============ -->
+<section class="pillow-show" id="pillowShow">
+  <div class="pillow-show-text">
+    <span class="eyebrow" data-i18n="pillow.eyebrow"></span>
+    <h2 data-i18n="pillow.title"></h2>
+    <p data-i18n="pillow.desc"></p>
+  </div>
+  <div class="pillow-stage">
+    <div class="couch-shape">
+      <div class="couch-arm left"></div>
+      <div class="couch-back"></div>
+      <div class="couch-base"></div>
+      <div class="couch-arm right"></div>
+    </div>
+    <div class="pillow p1"></div>
+    <div class="pillow p2"></div>
+    <div class="pillow p3"></div>
+    <div class="pillow p4"></div>
+    <div class="pillow p5"></div>
+  </div>
+</section>
+
+<!-- ============ CATEGORIES ============ -->
+<section class="section container">
+  <div class="section-title">
+    <h2 data-i18n="categories.title"></h2>
+    <p data-i18n="categories.subtitle"></p>
+  </div>
+  <div class="category-grid" data-category-grid></div>
+</section>
+
+<!-- ============ FEATURED PRODUCTS ============ -->
+<section class="section container" style="background:var(--cream-100); border-radius:var(--radius-lg);">
+  <div class="section-title">
+    <h2 data-i18n="featured.title"></h2>
+    <p data-i18n="featured.subtitle"></p>
+  </div>
+  <div class="product-grid" data-featured-grid></div>
+  <div class="text-center" style="margin-top:32px;">
+    <a href="products.html" class="btn btn-primary" data-i18n="featured.viewall"></a>
+  </div>
+</section>
+
+<!-- ============ HAKKIMIZDA ============ -->
+<section class="section container" id="about">
+  <div class="section-title">
+    <h2 data-i18n="about.title"></h2>
+    <p data-i18n="about.subtitle"></p>
+  </div>
+  <p class="about-intro" data-i18n="about.intro"></p>
+  <div class="about-gallery hidden" data-about-gallery></div>
+</section>
+
+<!-- ============ NEWSLETTER / WELCOME ============ -->
+<section class="section container">
+  <div style="background:var(--moss-800); border-radius:var(--radius-lg); padding:56px 32px; text-align:center; color:#fff;">
+    <h2 style="color:#fff;" data-i18n="newsletter.title"></h2>
+    <p style="color:rgba(245,245,240,.85); max-width:520px; margin:0 auto 24px;" data-i18n="newsletter.desc"></p>
+    <form style="display:flex; gap:12px; max-width:420px; margin:0 auto; flex-wrap:wrap; justify-content:center;" onsubmit="event.preventDefault(); mossynaShowToast(mossynaGetLang()==='tr' ? 'Abone olundu ✓' : 'Subscribed ✓');">
+      <input type="email" required data-i18n-placeholder="newsletter.placeholder" style="flex:1; min-width:220px; padding:14px 16px; border-radius:var(--radius-sm); border:none;">
+      <button type="submit" class="btn btn-gold" data-i18n="newsletter.btn"></button>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer" id="contact">
+  <div class="footer-grid container">
+    <div>
+      <h4 data-i18n="footer.about.title"></h4>
+      <p data-i18n="footer.about.desc"></p>
+    </div>
+    <div>
+      <h4 data-i18n="footer.links.title"></h4>
+      <ul>
+        <li><a href="index.html" data-i18n="nav.home"></a></li>
+        <li><a href="products.html" data-i18n="nav.products"></a></li>
+        <li><a href="login.html" data-i18n="nav.login"></a></li>
+        <li><a href="contact.html" data-i18n="nav.contact"></a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 data-i18n="footer.help.title"></h4>
+      <ul>
+        <li><a href="#" data-i18n="footer.help.shipping"></a></li>
+        <li><a href="#" data-i18n="footer.help.returns"></a></li>
+        <li><a href="#" data-i18n="footer.help.faq"></a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 data-i18n="footer.contact.title"></h4>
+      <ul>
+        <li>info@mossyna.com</li>
+        <li>+90 212 000 00 00</li>
+        <li>İstanbul, Türkiye</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-row">
+      <span>&copy; 2026 Mossyna. <span data-i18n="footer.rights"></span></span>
+      <span class="footer-legal-links">
+        <a href="kvkk.html" data-i18n="footer.legal.kvkk"></a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="kullanim-kosullari.html" data-i18n="footer.legal.terms"></a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="#" data-open-cookie-settings data-i18n="footer.legal.cookies"></a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ WELCOME DISCOUNT MODAL ============ -->
+<div class="welcome-modal-overlay">
+  <div class="welcome-modal">
+    <button class="close-btn" data-close-welcome>✕</button>
+    <span class="badge-percent" data-i18n="welcome.badge"></span>
+    <h3 data-i18n="welcome.title"></h3>
+    <p data-i18n="welcome.desc"></p>
+    <div class="coupon-code">WELCOME10</div>
+    <a href="products.html" class="btn btn-primary btn-block" data-close-welcome data-i18n="welcome.cta"></a>
+  </div>
+</div>
+
+<!-- ============ CART DRAWER ============ -->
+<div class="cart-drawer-overlay"></div>
+<div class="cart-drawer">
+  <div class="cart-drawer-header">
+    <h3 style="margin:0;" data-i18n="cart.title"></h3>
+    <button class="icon-btn" data-close-cart>✕</button>
+  </div>
+  <div class="cart-drawer-items"></div>
+  <div class="cart-drawer-footer">
+    <div class="cart-subtotal-row">
+      <span data-i18n="cart.subtotal"></span>
+      <span class="cart-drawer-subtotal">₺0,00</span>
+    </div>
+    <a href="checkout.html" class="btn btn-primary btn-block" data-i18n="cart.checkout"></a>
+  </div>
+</div>
+
+<!-- ============ WHATSAPP CANLI DESTEK ============ -->
+<a class="whatsapp-float" href="https://wa.me/TELEFON_NO_BURAYA" target="_blank" rel="noopener" title="WhatsApp Destek" data-i18n-title="whatsapp.tooltip">
+  <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+    <path d="M16.01 3C9.38 3 4 8.38 4 15.01c0 2.35.64 4.56 1.86 6.51L4 29l7.66-1.82a12.9 12.9 0 0 0 4.35.75h.01C22.63 27.93 28 22.55 28 15.92 28 9.29 22.63 3.9 16.01 3Zm0 22.87c-1.5 0-2.97-.4-4.26-1.15l-.31-.18-4.55 1.08 1.11-4.5-.2-.32a10.55 10.55 0 0 1-1.65-5.79c0-5.83 4.75-10.58 10.6-10.58 2.83 0 5.49 1.11 7.49 3.11a10.5 10.5 0 0 1 3.1 7.47c0 5.83-4.75 10.86-10.33 10.86Zm5.79-7.93c-.32-.16-1.88-.93-2.17-1.03-.29-.11-.5-.16-.72.16-.21.32-.82 1.03-1.01 1.24-.19.21-.37.24-.69.08-.32-.16-1.34-.49-2.55-1.57-.94-.84-1.58-1.87-1.76-2.19-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.55.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.55-.08-.16-.72-1.74-.99-2.38-.26-.63-.53-.54-.72-.55l-.61-.01c-.21 0-.55.08-.84.4-.29.32-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.23 3.4 5.4 4.77.75.32 1.34.52 1.8.66.76.24 1.44.21 1.99.13.61-.09 1.88-.77 2.14-1.51.27-.74.27-1.38.19-1.51-.08-.13-.29-.21-.61-.37Z"/>
+  </svg>
+</a>
+
+<script src="js/env.js"></script>
+<script src="js/api.js"></script>
+<script src="js/products.js"></script>
+<script src="js/mock-data.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script src="js/about-section.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="js/scroll-show.js"></script>
+<script src="js/cookie-consent.js"></script>
+</body>
+</html>

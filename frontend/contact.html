@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>İletişim | Mossyna</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="announce-bar" data-i18n="announce.text"></div>
+  <div class="header-main container">
+    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Mossyna"></a>
+    <nav class="main-nav">
+      <a href="index.html" data-i18n="nav.home"></a>
+      <a href="products.html" data-i18n="nav.products"></a>
+      <a href="products.html?segment=corporate" data-i18n="nav.corporate"></a>
+      <a href="index.html#about" data-i18n="nav.about"></a>
+      <a href="contact.html" class="active" data-i18n="nav.contact"></a>
+    </nav>
+    <div class="header-actions">
+      <div class="lang-switch">
+        <button data-lang="tr">TR</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="de">DE</button>
+        <button data-lang="fr">FR</button>
+        <button data-lang="ru">RU</button>
+        <button data-lang="ar">AR</button>
+      </div>
+      <a href="login.html" class="icon-btn" data-account-link title="Hesabım">👤</a>
+      <button class="icon-btn" data-open-cart title="Sepetim">
+        🛍️<span class="cart-badge">0</span>
+      </button>
+      <button class="hamburger">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ PAGE HEADER ============ -->
+<section class="container" style="padding:32px 24px 0;">
+  <h1 data-i18n="contact.pagetitle" style="font-size:2rem;"></h1>
+  <p style="color:var(--text-muted); max-width:560px;" data-i18n="contact.subtitle"></p>
+</section>
+
+<!-- ============ CONTACT LAYOUT ============ -->
+<section class="container section">
+  <div class="checkout-layout">
+
+    <!-- ============ LEFT: FORM ============ -->
+    <div>
+      <div class="checkout-card" id="contactFormCard">
+        <h3 data-i18n="contact.form.title"></h3>
+
+        <div id="contactErrorBanner" class="hidden" style="background:#fdecea; border:1px solid var(--danger); color:var(--danger); border-radius:var(--radius-md); padding:12px 16px; margin-bottom:20px; font-size:.9rem;"></div>
+
+        <form id="contactForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label data-i18n="contact.name"></label>
+              <input type="text" id="contactName" required>
+              <div class="field-error"></div>
+            </div>
+            <div class="form-group">
+              <label data-i18n="auth.email"></label>
+              <input type="email" id="contactEmail" required autocomplete="email">
+              <div class="field-error"></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label data-i18n="contact.phone"></label>
+              <input type="tel" id="contactPhone" placeholder="+90 5xx xxx xx xx">
+            </div>
+            <div class="form-group">
+              <label data-i18n="contact.subject"></label>
+              <input type="text" id="contactSubject">
+            </div>
+          </div>
+          <div class="form-group">
+            <label data-i18n="contact.message"></label>
+            <textarea rows="5" id="contactMessage" required></textarea>
+            <div class="field-error"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" id="contactSubmitBtn" data-i18n="contact.sendbtn"></button>
+        </form>
+      </div>
+
+      <!-- ============ SUCCESS PANEL ============ -->
+      <div class="checkout-card hidden" id="contactSuccessPanel" style="text-align:center;">
+        <div style="font-size:2.4rem; margin-bottom:8px;">✅</div>
+        <h3 data-i18n="contact.success.title"></h3>
+        <p class="form-hint" data-i18n="contact.success.desc"></p>
+      </div>
+    </div>
+
+    <!-- ============ RIGHT: CONTACT INFO ============ -->
+    <div class="order-summary">
+      <h3 data-i18n="contact.info.title"></h3>
+      <div class="summary-line"><span>📧</span><span>info@mossyna.com</span></div>
+      <div class="summary-line"><span>📞</span><span>+90 212 000 00 00</span></div>
+      <div class="summary-line"><span>📍</span><span data-i18n="contact.info.address"></span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="footer-grid container">
+    <div>
+      <h4 data-i18n="footer.about.title"></h4>
+      <p data-i18n="footer.about.desc"></p>
+    </div>
+    <div>
+      <h4 data-i18n="footer.links.title"></h4>
+      <ul>
+        <li><a href="index.html" data-i18n="nav.home"></a></li>
+        <li><a href="products.html" data-i18n="nav.products"></a></li>
+        <li><a href="login.html" data-i18n="nav.login"></a></li>
+        <li><a href="contact.html" data-i18n="nav.contact"></a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 data-i18n="footer.help.title"></h4>
+      <ul>
+        <li><a href="#" data-i18n="footer.help.shipping"></a></li>
+        <li><a href="#" data-i18n="footer.help.returns"></a></li>
+        <li><a href="#" data-i18n="footer.help.faq"></a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 data-i18n="footer.contact.title"></h4>
+      <ul>
+        <li>info@mossyna.com</li>
+        <li>+90 212 000 00 00</li>
+        <li>İstanbul, Türkiye</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-bottom-row">
+      <span>&copy; 2026 Mossyna. <span data-i18n="footer.rights"></span></span>
+      <span class="footer-legal-links">
+        <a href="kvkk.html" data-i18n="footer.legal.kvkk"></a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="kullanim-kosullari.html" data-i18n="footer.legal.terms"></a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="#" data-open-cookie-settings data-i18n="footer.legal.cookies"></a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ CART DRAWER ============ -->
+<div class="cart-drawer-overlay"></div>
+<div class="cart-drawer">
+  <div class="cart-drawer-header">
+    <h3 style="margin:0;" data-i18n="cart.title"></h3>
+    <button class="icon-btn" data-close-cart>✕</button>
+  </div>
+  <div class="cart-drawer-items"></div>
+  <div class="cart-drawer-footer">
+    <div class="cart-subtotal-row">
+      <span data-i18n="cart.subtotal"></span>
+      <span class="cart-drawer-subtotal">₺0,00</span>
+    </div>
+    <a href="checkout.html" class="btn btn-primary btn-block" data-i18n="cart.checkout"></a>
+  </div>
+</div>
+
+<script src="js/env.js"></script>
+<script src="js/api.js"></script>
+<script src="js/products.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+<script>
+  /* ---------- İletişim Formu: POST /api/contact ---------- */
+  function mossynaShowContactError(message) {
+    const banner = document.getElementById("contactErrorBanner");
+    banner.textContent = message;
+    banner.classList.remove("hidden");
+  }
+
+  function mossynaHideContactError() {
+    document.getElementById("contactErrorBanner").classList.add("hidden");
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("contactForm");
+    if (!form) return;
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      mossynaHideContactError();
+
+      const nameInput = document.getElementById("contactName");
+      const emailInput = document.getElementById("contactEmail");
+      const messageInput = document.getElementById("contactMessage");
+
+      [nameInput, emailInput, messageInput].forEach(mossynaClearFieldError);
+
+      let valid = true;
+      if (!nameInput.value.trim()) {
+        mossynaSetFieldError(nameInput, mossynaT("auth.error.required"));
+        valid = false;
+      }
+      if (!emailInput.value.trim() || !mossynaIsValidEmail(emailInput.value.trim())) {
+        mossynaSetFieldError(emailInput, mossynaT("auth.error.email"));
+        valid = false;
+      }
+      if (!messageInput.value.trim()) {
+        mossynaSetFieldError(messageInput, mossynaT("contact.error.message"));
+        valid = false;
+      }
+      if (!valid) return;
+
+      const payload = {
+        name: nameInput.value.trim(),
+        email: emailInput.value.trim(),
+        phone: document.getElementById("contactPhone").value.trim() || null,
+        subject: document.getElementById("contactSubject").value.trim() || null,
+        message: messageInput.value.trim(),
+      };
+
+      const submitBtn = document.getElementById("contactSubmitBtn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = mossynaT("contact.sending");
+
+      try {
+        await mossynaApi.post("/api/contact", payload);
+        document.getElementById("contactFormCard").classList.add("hidden");
+        document.getElementById("contactSuccessPanel").classList.remove("hidden");
+      } catch (err) {
+        mossynaShowContactError(err.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = mossynaT("contact.sendbtn");
+      }
+    });
+  });
+</script>
+
+<!-- ============ WHATSAPP CANLI DESTEK ============ -->
+<a class="whatsapp-float" href="https://wa.me/TELEFON_NO_BURAYA" target="_blank" rel="noopener" title="WhatsApp Destek" data-i18n-title="whatsapp.tooltip">
+  <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+    <path d="M16.01 3C9.38 3 4 8.38 4 15.01c0 2.35.64 4.56 1.86 6.51L4 29l7.66-1.82a12.9 12.9 0 0 0 4.35.75h.01C22.63 27.93 28 22.55 28 15.92 28 9.29 22.63 3.9 16.01 3Zm0 22.87c-1.5 0-2.97-.4-4.26-1.15l-.31-.18-4.55 1.08 1.11-4.5-.2-.32a10.55 10.55 0 0 1-1.65-5.79c0-5.83 4.75-10.58 10.6-10.58 2.83 0 5.49 1.11 7.49 3.11a10.5 10.5 0 0 1 3.1 7.47c0 5.83-4.75 10.86-10.33 10.86Zm5.79-7.93c-.32-.16-1.88-.93-2.17-1.03-.29-.11-.5-.16-.72.16-.21.32-.82 1.03-1.01 1.24-.19.21-.37.24-.69.08-.32-.16-1.34-.49-2.55-1.57-.94-.84-1.58-1.87-1.76-2.19-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.55.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.55-.08-.16-.72-1.74-.99-2.38-.26-.63-.53-.54-.72-.55l-.61-.01c-.21 0-.55.08-.84.4-.29.32-1.1 1.08-1.1 2.63s1.13 3.05 1.29 3.26c.16.21 2.23 3.4 5.4 4.77.75.32 1.34.52 1.8.66.76.24 1.44.21 1.99.13.61-.09 1.88-.77 2.14-1.51.27-.74.27-1.38.19-1.51-.08-.13-.29-.21-.61-.37Z"/>
+  </svg>
+</a>
+
+<script src="js/cookie-consent.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kayıt Ol | Mossyna</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="auth-page">
+
+  <!-- ============ SOL: MARKA PANELİ ============ -->
+  <div class="auth-visual">
+    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Mossyna"></a>
+    <div>
+      <blockquote data-i18n="auth.quote"></blockquote>
+      <p class="quote-attr" data-i18n="auth.quote.attr"></p>
+    </div>
+    <div class="auth-trust">
+      <span>🔒 <span data-i18n="auth.trust.secure"></span></span>
+      <span>⚡ <span data-i18n="auth.trust.fast"></span></span>
+    </div>
+  </div>
+
+  <!-- ============ SAĞ: FORM ============ -->
+  <div class="auth-form-side">
+    <div class="auth-form-card">
+      <a href="index.html" class="back-home">← <span data-i18n="nav.home"></span></a>
+
+      <div class="auth-tab-switch">
+        <a href="login.html" data-i18n="auth.tab.login"></a>
+        <a href="register.html" class="active" data-i18n="auth.tab.register"></a>
+      </div>
+
+      <h1 data-i18n="auth.register.title"></h1>
+      <p class="auth-subtitle" data-i18n="auth.register.subtitle"></p>
+
+      <form id="registerForm" novalidate>
+
+        <!-- Bireysel / Kurumsal seçim -->
+        <div class="role-toggle">
+          <input type="radio" name="role" id="roleIndividual" value="individual" checked>
+          <label for="roleIndividual" data-i18n="auth.role.individual"></label>
+          <input type="radio" name="role" id="roleCorporate" value="corporate">
+          <label for="roleCorporate" data-i18n="auth.role.corporate"></label>
+        </div>
+
+        <div id="b2bBenefitsBox" class="hidden" style="background:var(--moss-100); border-radius:var(--radius-md); padding:16px 18px; margin-bottom:20px;">
+          <ul class="b2b-benefits">
+            <li data-i18n="auth.b2b.benefit1"></li>
+            <li data-i18n="auth.b2b.benefit2"></li>
+            <li data-i18n="auth.b2b.benefit3"></li>
+          </ul>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="auth.firstname"></label>
+            <input type="text" id="regFirstName" required>
+            <div class="field-error"></div>
+          </div>
+          <div class="form-group">
+            <label data-i18n="auth.lastname"></label>
+            <input type="text" id="regLastName" required>
+            <div class="field-error"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="auth.email"></label>
+          <input type="email" id="regEmail" required autocomplete="email">
+          <div class="field-error"></div>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="auth.phone"></label>
+          <input type="tel" id="regPhone" required placeholder="+90 5xx xxx xx xx">
+          <div class="field-error"></div>
+        </div>
+
+        <!-- Kurumsal Alanlar (rol seçimine göre gösterilir) -->
+        <div id="registerCorporateFields" class="hidden">
+          <div class="form-group">
+            <label data-i18n="checkout.company"></label>
+            <input type="text" id="regCompanyName">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label data-i18n="checkout.taxoffice"></label>
+              <input type="text" id="regTaxOffice">
+            </div>
+            <div class="form-group">
+              <label data-i18n="checkout.taxnumber"></label>
+              <input type="text" id="regTaxNumber">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="auth.password"></label>
+            <div class="password-field">
+              <input type="password" id="regPassword" required autocomplete="new-password">
+              <button type="button" class="toggle-pw">Göster</button>
+            </div>
+            <div class="field-error"></div>
+          </div>
+          <div class="form-group">
+            <label data-i18n="auth.confirmpassword"></label>
+            <div class="password-field">
+              <input type="password" id="regConfirmPassword" required autocomplete="new-password">
+              <button type="button" class="toggle-pw">Göster</button>
+            </div>
+            <div class="field-error"></div>
+          </div>
+        </div>
+
+        <label class="form-check">
+          <input type="checkbox" id="regKvkk" required>
+          <span data-i18n="auth.kvkk"></span>
+        </label>
+        <label class="form-check">
+          <input type="checkbox" id="regMarketing">
+          <span data-i18n="auth.marketing"></span>
+        </label>
+
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="auth.registerbtn"></button>
+      </form>
+
+      <div class="auth-divider"><span data-i18n="auth.divider.or"></span></div>
+
+      <button type="button" class="btn btn-outline btn-block google-btn" data-google-login>
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/>
+          <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6 29.6 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/>
+          <path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.3-5.1l-6.6-5.6C29.6 35.1 26.9 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.6 5.1C9.5 39.6 16.2 44 24 44z"/>
+          <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4 5.6l6.6 5.6C41.9 35.9 44 30.4 44 24c0-1.3-.1-2.7-.4-3.5z"/>
+        </svg>
+        <span data-i18n="auth.google.cta"></span>
+      </button>
+
+      <p class="text-center" style="font-size:.9rem; margin-top:20px;">
+        <span data-i18n="auth.hasaccount"></span>
+        <a href="login.html" style="color:var(--moss-700); font-weight:700;" data-i18n="auth.gotologin"></a>
+      </p>
+
+      <p class="text-center" style="margin-top:24px;">
+        <span class="lang-switch" style="display:inline-flex;">
+          <button data-lang="tr">TR</button>
+          <button data-lang="en">EN</button>
+          <button data-lang="de">DE</button>
+          <button data-lang="fr">FR</button>
+          <button data-lang="ru">RU</button>
+          <button data-lang="ar">AR</button>
+        </span>
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/env.js"></script>
+<script src="js/api.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/auth.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="js/auth-google.js"></script>
+<script src="js/cookie-consent.js"></script>
+</body>
+</html>

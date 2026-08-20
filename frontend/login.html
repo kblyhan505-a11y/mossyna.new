@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giriş Yap | Mossyna</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="auth-page">
+
+  <!-- ============ SOL: MARKA PANELİ ============ -->
+  <div class="auth-visual">
+    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Mossyna"></a>
+    <div>
+      <blockquote data-i18n="auth.quote"></blockquote>
+      <p class="quote-attr" data-i18n="auth.quote.attr"></p>
+    </div>
+    <div class="auth-trust">
+      <span>🔒 <span data-i18n="auth.trust.secure"></span></span>
+      <span>⚡ <span data-i18n="auth.trust.fast"></span></span>
+    </div>
+  </div>
+
+  <!-- ============ SAĞ: FORM ============ -->
+  <div class="auth-form-side">
+    <div class="auth-form-card">
+      <a href="index.html" class="back-home">← <span data-i18n="nav.home"></span></a>
+
+      <div class="auth-tab-switch">
+        <a href="login.html" class="active" data-i18n="auth.tab.login"></a>
+        <a href="register.html" data-i18n="auth.tab.register"></a>
+      </div>
+
+      <h1 data-i18n="auth.login.title"></h1>
+      <p class="auth-subtitle" data-i18n="auth.login.subtitle"></p>
+
+      <form id="loginForm" novalidate>
+        <div class="form-group">
+          <label data-i18n="auth.email"></label>
+          <input type="email" id="loginEmail" required autocomplete="email">
+          <div class="field-error"></div>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="auth.password"></label>
+          <div class="password-field">
+            <input type="password" id="loginPassword" required autocomplete="current-password">
+            <button type="button" class="toggle-pw">Göster</button>
+          </div>
+          <div class="field-error"></div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+          <label class="form-check" style="margin:0;">
+            <input type="checkbox"> <span data-i18n="auth.remember"></span>
+          </label>
+          <a href="#" style="font-size:.84rem; color:var(--moss-700); font-weight:600;" data-i18n="auth.forgot"></a>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="auth.loginbtn"></button>
+      </form>
+
+      <div class="auth-divider"><span data-i18n="auth.divider.or"></span></div>
+
+      <button type="button" class="btn btn-outline btn-block google-btn" data-google-login>
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/>
+          <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l5.7-5.7C34.6 6 29.6 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/>
+          <path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.3-5.1l-6.6-5.6C29.6 35.1 26.9 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.6 5.1C9.5 39.6 16.2 44 24 44z"/>
+          <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4 5.6l6.6 5.6C41.9 35.9 44 30.4 44 24c0-1.3-.1-2.7-.4-3.5z"/>
+        </svg>
+        <span data-i18n="auth.google.cta"></span>
+      </button>
+
+      <p class="text-center" style="font-size:.9rem; margin-top:20px;">
+        <span data-i18n="auth.noaccount"></span>
+        <a href="register.html" style="color:var(--moss-700); font-weight:700;" data-i18n="auth.gotoregister"></a>
+      </p>
+
+      <p class="text-center" style="margin-top:24px;">
+        <span class="lang-switch" style="display:inline-flex;">
+          <button data-lang="tr">TR</button>
+          <button data-lang="en">EN</button>
+          <button data-lang="de">DE</button>
+          <button data-lang="fr">FR</button>
+          <button data-lang="ru">RU</button>
+          <button data-lang="ar">AR</button>
+        </span>
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/env.js"></script>
+<script src="js/api.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/auth.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="js/auth-google.js"></script>
+<script src="js/cookie-consent.js"></script>
+</body>
+</html>
