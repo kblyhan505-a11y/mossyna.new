@@ -1,0 +1,90 @@
+# =====================================================================
+# MOSSYNA — Render Blueprint
+#
+# Bu dosya, Render.com'da "New +" → "Blueprint" ile bu repoyu seçtiğinizde
+# üç servisi birden (veritabanı + backend + iki statik site) otomatik olarak
+# kurar. Detaylı adım adım talimat için DEPLOY.md dosyasına bakın.
+#
+# NOT: `sync: false` işaretli ortam değişkenleri Render panelinde deploy
+# sırasında sizden elle istenir (gizli bilgiler burada düz metin olarak
+# TUTULMAZ).
+# =====================================================================
+
+databases:
+  - name: mossyna-db
+    plan: pro-4gb
+    region: frankfurt
+    postgresMajorVersion: "16"
+
+services:
+  # --- Backend API (FastAPI) ---
+  - type: web
+    name: mossyna-backend
+    runtime: python
+    plan: standard
+    region: frankfurt
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mossyna-db
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: https://mossyna.com,https://www.mossyna.com,https://admin.mossyna.com
+      - key: ENVIRONMENT
+        value: production
+      - key: FRONTEND_BASE_URL
+        value: https://mossyna.com
+      - key: STORAGE_BACKEND
+        value: s3
+      - key: S3_ENDPOINT_URL
+        sync: false
+      - key: S3_ACCESS_KEY_ID
+        sync: false
+      - key: S3_SECRET_ACCESS_KEY
+        sync: false
+      - key: S3_BUCKET_NAME
+        sync: false
+      - key: S3_PUBLIC_BASE_URL
+        sync: false
+      - key: PAYTR_MERCHANT_ID
+        sync: false
+      - key: PAYTR_MERCHANT_KEY
+        sync: false
+      - key: PAYTR_MERCHANT_SALT
+        sync: false
+      - key: PAYTR_TEST_MODE
+        value: "0"
+      - key: PAYTR_SUCCESS_URL
+        value: https://mossyna.com/checkout/success
+      - key: PAYTR_FAIL_URL
+        value: https://mossyna.com/checkout/failed
+      - key: PAYTR_NOTIFICATION_URL
+        value: https://api.mossyna.com/api/payments/webhook/paytr
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+
+  # --- Müşteri sitesi (statik) ---
+  - type: web
+    runtime: static
+    name: mossyna-frontend
+    rootDir: frontend
+    buildCommand: ""
+    staticPublishPath: .
+
+  # --- Yönetici paneli (statik) ---
+  - type: web
+    runtime: static
+    name: mossyna-admin
+    rootDir: admin
+    buildCommand: ""
+    staticPublishPath: .

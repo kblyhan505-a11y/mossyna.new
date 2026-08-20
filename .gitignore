@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+*.egg-info/
+
+# Ortam değişkenleri / gizli bilgiler
+.env
+.env.*
+!.env.example
+
+# Yüklenen ürün görselleri (yerelde test amaçlı; production'da R2/S3 kullanılacak)
+backend/media/
+
+# Node / araçlar
+node_modules/
+
+# İşletim sistemi / editör
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
