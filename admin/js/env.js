@@ -10,7 +10,7 @@
    ===================================================================== */
 
 (function () {
-  var PRODUCTION_API_URL = "https://api.mossyna.com.tr";
+  var PRODUCTION_API_URL = "https://mossyna-backend.onrender.com";
   var isLocal = ["localhost", "127.0.0.1"].includes(window.location.hostname);
   window.MOSSYNA_API_BASE_URL = isLocal ? "http://localhost:8000" : PRODUCTION_API_URL;
 })();
