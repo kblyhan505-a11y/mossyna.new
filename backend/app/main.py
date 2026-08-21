@@ -27,9 +27,15 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Başlangıç: tablo oluşturma (yalnızca geliştirme için — production'da Alembic migration kullanılmalı)
-    if settings.environment == "development":
-        Base.metadata.create_all(bind=engine)
+    # Başlangıç: tablo oluşturma + başlangıç verisi (süper yönetici hesabı,
+    # temel kategoriler, örnek ürünler, karşılama kuponu, başlangıç kuru).
+    # app/scripts/seed.py'deki run() fonksiyonu İDEMPOTENTTİR — yani her
+    # başlangıçta çalışsa bile sadece EKSİK olan kayıtları oluşturur, var
+    # olan hiçbir veriye dokunmaz veya onu silmez. Bu sayede Render'da ayrı
+    # bir Shell/Job adımına gerek kalmadan ilk canlıya çıkışta veritabanı
+    # otomatik hazır hale gelir.
+    from app.scripts.seed import run as seed_initial_data
+    seed_initial_data()
     start_scheduler()
     yield
     # Kapanış
