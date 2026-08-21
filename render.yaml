@@ -12,7 +12,7 @@
 
 databases:
   - name: mossyna-db
-    plan: pro-4gb
+    plan: basic-1gb
     region: frankfurt
     postgresMajorVersion: "16"
 
@@ -21,7 +21,7 @@ services:
   - type: web
     name: mossyna-backend
     runtime: python
-    plan: standard
+    plan: starter
     region: frankfurt
     rootDir: backend
     buildCommand: pip install -r requirements.txt
@@ -35,11 +35,11 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: CORS_ORIGINS
-        value: https://mossyna.com,https://www.mossyna.com,https://admin.mossyna.com
+        value: https://mossyna.com.tr,https://www.mossyna.com.tr,https://admin.mossyna.com.tr
       - key: ENVIRONMENT
         value: production
       - key: FRONTEND_BASE_URL
-        value: https://mossyna.com
+        value: https://mossyna.com.tr
       - key: STORAGE_BACKEND
         value: s3
       - key: S3_ENDPOINT_URL
@@ -61,16 +61,24 @@ services:
       - key: PAYTR_TEST_MODE
         value: "0"
       - key: PAYTR_SUCCESS_URL
-        value: https://mossyna.com/checkout/success
+        value: https://mossyna.com.tr/checkout/success
       - key: PAYTR_FAIL_URL
-        value: https://mossyna.com/checkout/failed
+        value: https://mossyna.com.tr/checkout/failed
       - key: PAYTR_NOTIFICATION_URL
-        value: https://api.mossyna.com/api/payments/webhook/paytr
+        value: https://api.mossyna.com.tr/api/payments/webhook/paytr
       - key: STRIPE_SECRET_KEY
         sync: false
       - key: STRIPE_WEBHOOK_SECRET
         sync: false
       - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: GOOGLE_OAUTH_CLIENT_ID
+        value: 1063486261424-lc1kprhmj0ag0v7r00j9ibicj3va5gtv.apps.googleusercontent.com
+      - key: SHOPIFY_STORE_DOMAIN
+        sync: false
+      - key: SHOPIFY_STOREFRONT_ACCESS_TOKEN
+        sync: false
+      - key: SHOPIFY_WEBHOOK_SECRET
         sync: false
 
   # --- Müşteri sitesi (statik) ---
