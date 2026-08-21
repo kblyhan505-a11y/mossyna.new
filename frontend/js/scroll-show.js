@@ -26,11 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
   gsap.set(textEl, { opacity: 0, y: 24 });
   gsap.set(pillows, { opacity: 1 }); // gerçek başlangıç opaklığı .from() içinde belirlenir
 
+  // Mobilde ekran daha küçük ve kaydırma mesafesi daha "değerli" olduğu için
+  // sahneyi daha kısa tutuyoruz — kullanıcı sahnede uzun süre sıkışmış hissetmesin.
+  const isCompact = window.matchMedia("(max-width: 640px)").matches;
+
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: section,
       start: "top top",
-      end: "+=140%",
+      end: isCompact ? "+=90%" : "+=140%",
       scrub: 0.6,
       pin: true,
       anticipatePin: 1,

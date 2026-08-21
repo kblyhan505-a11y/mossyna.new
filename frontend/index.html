@@ -15,7 +15,10 @@
 <header class="site-header">
   <div class="announce-bar" data-i18n="announce.text"></div>
   <div class="header-main container">
-    <a href="index.html" class="logo"><img src="assets/logo.png" alt="Mossyna"></a>
+    <a href="index.html" class="logo">
+      <span class="logo-text">Mossyna</span>
+      <svg class="logo-stitch" viewBox="0 0 140 10" aria-hidden="true"><path d="M2 5 Q19 1,36 5 T70 5 T104 5 T138 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-dasharray="4 3.5" stroke-linecap="round"/></svg>
+    </a>
 
     <nav class="main-nav">
       <a href="index.html" class="active" data-i18n="nav.home"></a>
@@ -46,7 +49,6 @@
 <!-- ============ HERO ============ -->
 <section class="hero container" style="max-width:100%;">
   <div class="hero-content">
-    <div class="hero-logo-lockup"><img src="assets/logo.png" alt="Mossyna"></div>
     <span class="eyebrow" data-i18n="hero.eyebrow"></span>
     <h1 data-i18n="hero.title"></h1>
     <p data-i18n="hero.desc"></p>
@@ -56,17 +58,37 @@
     </div>
   </div>
   <div class="hero-image">
-    <img src="https://placehold.co/560x640/e4ede7/1a5c40?text=Mossyna+Home" alt="Mossyna Ev Tekstili">
+    <div class="hero-visual-panel" role="img" aria-label="Mossyna Ev Tekstili">
+      <svg viewBox="0 0 560 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="heroFoldA" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2b6b4d"/>
+            <stop offset="100%" stop-color="#14392a"/>
+          </linearGradient>
+          <linearGradient id="heroFoldB" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0%" stop-color="#b8955a" stop-opacity=".85"/>
+            <stop offset="100%" stop-color="#b8955a" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="M-40 200 C160 120,420 160,600 60 L600 0 L-40 0 Z" fill="#e4ede7" opacity=".55"/>
+        <path d="M-40 420 C120 300,340 300,460 460 C520 540,480 620,380 640 L-40 640 Z" fill="url(#heroFoldA)" opacity=".92"/>
+        <path d="M-40 520 C160 460,380 520,600 420 L600 640 L-40 640 Z" fill="url(#heroFoldB)"/>
+      </svg>
+      <div class="hero-visual-mark">
+        <span>Mossyna</span>
+        <svg class="stitch" viewBox="0 0 140 10" aria-hidden="true"><path d="M2 5 Q19 1,36 5 T70 5 T104 5 T138 5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-dasharray="4 3.5" stroke-linecap="round"/></svg>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- ============ TRUST STRIP ============ -->
 <div class="container">
   <div class="trust-strip">
-    <div class="trust-item"><div class="ic">🌿</div><h4 data-i18n="trust.natural.title"></h4><p data-i18n="trust.natural.desc"></p></div>
-    <div class="trust-item"><div class="ic">🚚</div><h4 data-i18n="trust.shipping.title"></h4><p data-i18n="trust.shipping.desc"></p></div>
-    <div class="trust-item"><div class="ic">🔒</div><h4 data-i18n="trust.secure.title"></h4><p data-i18n="trust.secure.desc"></p></div>
-    <div class="trust-item"><div class="ic">💬</div><h4 data-i18n="trust.support.title"></h4><p data-i18n="trust.support.desc"></p></div>
+    <div class="trust-item"><div class="ic"><svg viewBox="0 0 32 32" fill="none"><path d="M16 4c-4 6-11 7-11 13a11 11 0 0 0 22 0c0-6-7-7-11-13Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div><h4 data-i18n="trust.natural.title"></h4><p data-i18n="trust.natural.desc"></p></div>
+    <div class="trust-item"><div class="ic"><svg viewBox="0 0 32 32" fill="none"><rect x="3" y="11" width="15" height="10" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M18 14h6l4 4v3h-10z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="9" cy="23" r="2.2" stroke="currentColor" stroke-width="1.8"/><circle cx="23" cy="23" r="2.2" stroke="currentColor" stroke-width="1.8"/></svg></div><h4 data-i18n="trust.shipping.title"></h4><p data-i18n="trust.shipping.desc"></p></div>
+    <div class="trust-item"><div class="ic"><svg viewBox="0 0 32 32" fill="none"><path d="M16 3 27 8v8c0 8-6 11.5-11 13-5-1.5-11-5-11-13V8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M11 16l3.5 3.5L21.5 12" stroke="var(--gold-500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h4 data-i18n="trust.secure.title"></h4><p data-i18n="trust.secure.desc"></p></div>
+    <div class="trust-item"><div class="ic"><svg viewBox="0 0 32 32" fill="none"><path d="M5 8h22a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H13l-6 5v-5H5a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div><h4 data-i18n="trust.support.title"></h4><p data-i18n="trust.support.desc"></p></div>
   </div>
 </div>
 

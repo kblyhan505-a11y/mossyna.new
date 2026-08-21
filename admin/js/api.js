@@ -2,7 +2,7 @@
    MOSSYNA ADMIN — Ortak API İstemcisi
 
    Backend adresini değiştirmek için, bu dosyayı yüklemeden önce
-   `window.MOSSYNA_API_BASE_URL = "https://api.mossyna.com";` tanımlayın.
+   `window.MOSSYNA_API_BASE_URL = "https://api.mossyna.com.tr";` tanımlayın.
    ===================================================================== */
 
 const MOSSYNA_API_BASE_URL = window.MOSSYNA_API_BASE_URL || "http://localhost:8000";
