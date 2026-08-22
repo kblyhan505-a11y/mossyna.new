@@ -5,7 +5,7 @@ MOSSYNA BACKEND — Ürünler, Kategoriler ve Ürün Görselleri
 import re
 
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File, status
-from sqlalchemy import select, func
+from sqlalchemy import select, func, update
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -53,7 +53,7 @@ def _upsert_product_translations(
     existing = {t.language_code: t for t in product.translations}
     for lang_code, item in translations.items():
         if lang_code not in SUPPORTED_TRANSLATION_LANGS:
-            continue
+            continue  # bilinmeyen/desteklenmeyen dil kodu — sessizce yoksay
         row = existing.get(lang_code)
         if row:
             row.name = item.name
@@ -69,10 +69,18 @@ def _upsert_product_translations(
             ))
 
 
+# ---------------------------------------------------------------------
+# KATEGORİLER (Public — admin ürün formu ve müşteri filtreleri bunu kullanır)
+# ---------------------------------------------------------------------
+
 @router.get("/api/categories", response_model=list[schemas.CategoryResponse])
 def list_categories(db: Session = Depends(get_db)):
     return db.scalars(select(models.Category).where(models.Category.is_active.is_(True)).order_by(models.Category.sort_order)).all()
 
+
+# ---------------------------------------------------------------------
+# PUBLIC (müşteri arayüzü — frontend/products.html bu uçları tüketir)
+# ---------------------------------------------------------------------
 
 @router.get("/api/products", response_model=list[schemas.ProductListItem])
 def list_products(
@@ -117,6 +125,10 @@ def get_product_detail(slug: str, db: Session = Depends(get_db)):
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Ürün bulunamadı.")
     return product
 
+
+# ---------------------------------------------------------------------
+# ADMIN (admin/products.html bu uçları tüketir — JWT audience=admin gerekir)
+# ---------------------------------------------------------------------
 
 @router.get("/api/admin/products", response_model=schemas.AdminProductListResponse)
 def admin_list_products(
@@ -167,7 +179,12 @@ def admin_create_product(
         sku=payload.sku,
         category_id=payload.category_id,
         name_tr=payload.name_tr,
-        name_en=payload.name_en,
+        # İngilizce ürün adı artık zorunlu değil (bkz. admin/products.html "Product
+        # Name" alanı) — boş bırakılırsa sitede/sepette boş isim görünmesin diye
+        # Türkçe adı otomatik kopyalanır (DE/FR/RU/AR çevirilerindeki "boşsa Türkçe
+        # göster" kuralıyla aynı mantık, sadece name_en ayrı bir sütun olduğu için
+        # kayıt anında kopyalanıyor).
+        name_en=(payload.name_en or "").strip() or payload.name_tr,
         slug=_generate_unique_slug(db, payload.name_tr or payload.sku),
         short_desc_tr=payload.short_desc_tr,
         short_desc_en=payload.short_desc_en,
@@ -184,11 +201,15 @@ def admin_create_product(
         is_b2b_available=payload.is_b2b_available,
     )
     db.add(product)
-    db.flush()
+    db.flush()  # translations satırları için product.id gerekli
     _upsert_product_translations(db, product, payload.translations)
     db.commit()
     db.refresh(product)
 
+    # Shopify Admin API anahtarı tanımlıysa, ürünün Shopify tarafındaki karşılığını
+    # otomatik oluşturup ID'sini kaydeder — tanımlı değilse ya da bir sorun olursa
+    # sessizce None döner, "Shopify Variant ID" eskisi gibi elle doldurulabilir
+    # (bkz. services/shopify_admin_sync.py).
     synced_variant_id = sync_product_to_shopify(product)
     if synced_variant_id:
         product.shopify_variant_id = synced_variant_id
@@ -210,10 +231,15 @@ def admin_update_product(
 
     update_data = payload.model_dump(exclude_unset=True)
     manual_price = update_data.pop("price_try", None)
-    translations_set = update_data.pop("translations", None)
+    translations_set = update_data.pop("translations", None)  # ilişki alanı — setattr ile yazılamaz
 
     for field, value in update_data.items():
         setattr(product, field, value)
+
+    # bkz. admin_create_product yorumu — name_en boş bırakıldıysa (ya da hiç
+    # gönderilmediyse ama önceden boş kaldıysa) Türkçe adı otomatik kopyalanır.
+    if not (product.name_en or "").strip():
+        product.name_en = product.name_tr
 
     if translations_set:
         _upsert_product_translations(db, product, payload.translations)
@@ -228,6 +254,7 @@ def admin_update_product(
     db.commit()
     db.refresh(product)
 
+    # bkz. admin_create_product yorumu — aynı otomatik senkronizasyon güncellemede de çalışır.
     synced_variant_id = sync_product_to_shopify(product)
     if synced_variant_id:
         product.shopify_variant_id = synced_variant_id
@@ -245,9 +272,40 @@ def admin_delete_product(
     product = db.get(models.Product, product_id)
     if not product:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Ürün bulunamadı.")
+
+    # ÖNEMLİ: Bu ürün daha önce en az bir siparişte satılmışsa, o siparişin
+    # kalemi (order_items) hâlâ bu ürüne (ve varsa varyantına) referans veriyor
+    # olabilir. Sipariş geçmişi SİLİNMEZ — zaten o satıra kaydedilme anındaki isim/
+    # SKU/fiyat ayrıca "an'ın fotoğrafı" olarak kopyalanmıştır (product_name_snapshot,
+    # sku_snapshot) — ama artık var olmayan bir ürün/varyanta işaret etmesinler diye
+    # product_id/variant_id alanları önce NULL'a çekilir. Bu adım olmadan veritabanı,
+    # "foreign key" kısıtlaması yüzünden ürün silme işlemini reddediyordu (siparişi
+    # olan bir ürünü silmeye çalışınca 500 hatası + "backend sunucusuna bağlanamadı"
+    # olarak görünüyordu).
+    variant_ids = [v.id for v in product.variants]
+    if variant_ids:
+        db.execute(
+            update(models.OrderItem)
+            .where(models.OrderItem.variant_id.in_(variant_ids))
+            .values(variant_id=None)
+        )
+    db.execute(
+        update(models.OrderItem)
+        .where(models.OrderItem.product_id == product_id)
+        .values(product_id=None)
+    )
+
     db.delete(product)
     db.commit()
 
+
+# ---------------------------------------------------------------------
+# ADMIN — ÜRÜN GÖRSELİ YÜKLEME
+# Not: Dosyalar bu ortamda yerel diske (`backend/media/`) kaydedilir ve
+# main.py'de `/media` altında statik olarak servis edilir. Production'da
+# bunun yerine S3/Cloudflare R2 gibi bir nesne depolama servisi ve CDN
+# kullanılması önerilir (bkz. docs/architecture.md §2).
+# ---------------------------------------------------------------------
 
 @router.post("/api/admin/products/{product_id}/image", response_model=schemas.ProductListItem)
 async def admin_upload_product_image(
