@@ -23,6 +23,11 @@ Grant" denen küçük bir ek istekle üretiyoruz (bkz. _get_admin_access_token).
 SAKLAMIYORUZ — her ürün kaydında taze bir tane isteniyor. Bu, ürün kaydetme
 gibi seyrek olan bir işlem için performans açısından önemsiz bir maliyettir.
 
+NOT: "Client Credentials Grant" SADECE uygulama ile mağaza aynı Shopify
+hesabına/organizasyonuna aitse çalışır (bir tüccarın kendi mağazası için
+kendi oluşturduğu uygulama gibi — Mossyna'nın durumu tam olarak bu). Farklı
+hesaplara aitse Shopify bu isteği reddeder.
+
 Bu senkronizasyon İSTEĞE BAĞLIDIR: yapılandırma eksikse ya da Shopify
 tarafında herhangi bir sorun olursa (yanlış anahtar, geçici bağlantı sorunu,
 beklenmeyen bir hata vb.) fonksiyon sessizce None döner ve ürünün Mossyna'ya
@@ -73,13 +78,22 @@ def _get_admin_access_token() -> str | None:
             timeout=20.0,
         )
         response.raise_for_status()
+    except httpx.HTTPStatusError as exc:
+        # Shopify'ın 400/401 gibi durumlarda döndürdüğü asıl hata metnini (ör.
+        # "application_cannot_be_found" ya da "shop_not_permitted") log'a yazıyoruz —
+        # bu olmadan sadece "400 Bad Request" görünür, asıl neden anlaşılamaz.
+        logger.warning(
+            "Shopify'dan erişim anahtarı alınamadı (HTTP %s): %s",
+            exc.response.status_code, exc.response.text,
+        )
+        return None
     except httpx.HTTPError as exc:
-        logger.warning("Shopify'dan erişim anahtarı alınamadı: %s", exc)
+        logger.warning("Shopify'a bağlanılamadı: %s", exc)
         return None
 
     token = response.json().get("access_token")
     if not token:
-        logger.warning("Shopify erişim anahtarı yanıtında 'access_token' bulunamadı.")
+        logger.warning("Shopify erişim anahtarı yanıtında 'access_token' bulunamadı: %s", response.text)
         return None
     return token
 
@@ -100,6 +114,12 @@ def _admin_graphql(query: str, variables: dict) -> dict | None:
             timeout=20.0,
         )
         response.raise_for_status()
+    except httpx.HTTPStatusError as exc:
+        logger.warning(
+            "Shopify Admin API'ye bağlanılamadı (HTTP %s): %s",
+            exc.response.status_code, exc.response.text,
+        )
+        return None
     except httpx.HTTPError as exc:
         logger.warning("Shopify Admin API'ye bağlanılamadı: %s", exc)
         return None
