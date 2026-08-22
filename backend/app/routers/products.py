@@ -13,6 +13,7 @@ from app import models, schemas
 from app.security import get_current_admin
 from app.services.currency_service import get_latest_rate
 from app.services import storage
+from app.services.shopify_admin_sync import sync_product_to_shopify
 
 router = APIRouter(tags=["Ürünler"])
 
@@ -52,7 +53,7 @@ def _upsert_product_translations(
     existing = {t.language_code: t for t in product.translations}
     for lang_code, item in translations.items():
         if lang_code not in SUPPORTED_TRANSLATION_LANGS:
-            continue  # bilinmeyen/desteklenmeyen dil kodu — sessizce yoksay
+            continue
         row = existing.get(lang_code)
         if row:
             row.name = item.name
@@ -68,18 +69,10 @@ def _upsert_product_translations(
             ))
 
 
-# ---------------------------------------------------------------------
-# KATEGORİLER (Public — admin ürün formu ve müşteri filtreleri bunu kullanır)
-# ---------------------------------------------------------------------
-
 @router.get("/api/categories", response_model=list[schemas.CategoryResponse])
 def list_categories(db: Session = Depends(get_db)):
     return db.scalars(select(models.Category).where(models.Category.is_active.is_(True)).order_by(models.Category.sort_order)).all()
 
-
-# ---------------------------------------------------------------------
-# PUBLIC (müşteri arayüzü — frontend/products.html bu uçları tüketir)
-# ---------------------------------------------------------------------
 
 @router.get("/api/products", response_model=list[schemas.ProductListItem])
 def list_products(
@@ -124,10 +117,6 @@ def get_product_detail(slug: str, db: Session = Depends(get_db)):
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Ürün bulunamadı.")
     return product
 
-
-# ---------------------------------------------------------------------
-# ADMIN (admin/products.html bu uçları tüketir — JWT audience=admin gerekir)
-# ---------------------------------------------------------------------
 
 @router.get("/api/admin/products", response_model=schemas.AdminProductListResponse)
 def admin_list_products(
@@ -195,10 +184,16 @@ def admin_create_product(
         is_b2b_available=payload.is_b2b_available,
     )
     db.add(product)
-    db.flush()  # translations satırları için product.id gerekli
+    db.flush()
     _upsert_product_translations(db, product, payload.translations)
     db.commit()
     db.refresh(product)
+
+    synced_variant_id = sync_product_to_shopify(product)
+    if synced_variant_id:
+        product.shopify_variant_id = synced_variant_id
+        db.commit()
+        db.refresh(product)
     return product
 
 
@@ -215,7 +210,7 @@ def admin_update_product(
 
     update_data = payload.model_dump(exclude_unset=True)
     manual_price = update_data.pop("price_try", None)
-    translations_set = update_data.pop("translations", None)  # ilişki alanı — setattr ile yazılamaz
+    translations_set = update_data.pop("translations", None)
 
     for field, value in update_data.items():
         setattr(product, field, value)
@@ -232,6 +227,12 @@ def admin_update_product(
 
     db.commit()
     db.refresh(product)
+
+    synced_variant_id = sync_product_to_shopify(product)
+    if synced_variant_id:
+        product.shopify_variant_id = synced_variant_id
+        db.commit()
+        db.refresh(product)
     return product
 
 
@@ -247,14 +248,6 @@ def admin_delete_product(
     db.delete(product)
     db.commit()
 
-
-# ---------------------------------------------------------------------
-# ADMIN — ÜRÜN GÖRSELİ YÜKLEME
-# Not: Dosyalar bu ortamda yerel diske (`backend/media/`) kaydedilir ve
-# main.py'de `/media` altında statik olarak servis edilir. Production'da
-# bunun yerine S3/Cloudflare R2 gibi bir nesne depolama servisi ve CDN
-# kullanılması önerilir (bkz. docs/architecture.md §2).
-# ---------------------------------------------------------------------
 
 @router.post("/api/admin/products/{product_id}/image", response_model=schemas.ProductListItem)
 async def admin_upload_product_image(
