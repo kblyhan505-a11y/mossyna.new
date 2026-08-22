@@ -35,9 +35,11 @@ services:
       - key: JWT_SECRET_KEY
         generateValue: true
       - key: CORS_ORIGINS
-        value: https://mossyna.com.tr,https://www.mossyna.com.tr,https://admin.mossyna.com.tr
+        value: https://mossyna.com.tr,https://www.mossyna.com.tr,https://admin.mossyna.com.tr,https://mossyna-frontend.onrender.com,https://mossyna-admin.onrender.com
       - key: ENVIRONMENT
         value: production
+      - key: PYTHON_VERSION
+        value: 3.12.7
       - key: FRONTEND_BASE_URL
         value: https://mossyna.com.tr
       - key: STORAGE_BACKEND
@@ -77,6 +79,10 @@ services:
       - key: SHOPIFY_STORE_DOMAIN
         sync: false
       - key: SHOPIFY_STOREFRONT_ACCESS_TOKEN
+        sync: false
+      - key: SHOPIFY_ADMIN_CLIENT_ID
+        sync: false
+      - key: SHOPIFY_ADMIN_CLIENT_SECRET
         sync: false
       - key: SHOPIFY_WEBHOOK_SECRET
         sync: false
