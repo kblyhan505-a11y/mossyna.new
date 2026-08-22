@@ -11,7 +11,6 @@
 
 <div class="admin-layout">
 
-  <!-- ============ SIDEBAR ============ -->
   <aside class="admin-sidebar">
     <a href="index.html" class="logo"><img src="assets/logo.png" alt="Mossyna"></a>
     <nav class="admin-nav">
@@ -37,7 +36,6 @@
     </nav>
   </aside>
 
-  <!-- ============ MAIN ============ -->
   <div class="admin-main">
     <header class="admin-topbar">
       <div class="flex" style="align-items:center; gap:14px;">
@@ -102,7 +100,6 @@
   </div>
 </div>
 
-<!-- ============ ÜRÜN EKLE/DÜZENLE MODAL ============ -->
 <div class="admin-modal-overlay" id="productModalOverlay">
   <div class="admin-modal">
     <div class="admin-modal-header">
@@ -181,10 +178,10 @@
           </div>
           <div class="form-group">
             <label>Shopify Variant ID</label>
-            <input type="text" id="prodShopifyVariantId" placeholder="gid://shopify/ProductVariant/xxxx">
+            <input type="text" id="prodShopifyVariantId" placeholder="Örn: 45678901234567">
           </div>
         </div>
-        <p class="form-hint" style="margin-top:-10px; margin-bottom:16px;">Shopify Variant ID, ödeme sırasında bu ürünü Shopify mağazanızdaki karşılığına eşlemek için kullanılır — Shopify panelinizden kopyalayıp buraya yapıştırın. <strong>Bu alan boşsa, müşteri bu ürünü sepete ekleyip ödemeye geçtiğinde hata alır</strong> — ödeme açılmadan önce mutlaka doldurulmalıdır.</p>
+        <p class="form-hint" style="margin-top:-10px; margin-bottom:16px;">Otomatik Shopify bağlantısı kurulduysa bu alanı boş bırakabilirsiniz — ürünü kaydettiğinizde sistem, Shopify tarafındaki karşılığını kendisi oluşturur/günceller ve bu alanı otomatik doldurur. Elle doldurmak isterseniz, Shopify'daki ürünün sayfasında adres çubuğunda gördüğünüz sayıyı yapıştırmanız yeterli (başına "gid://..." eklemenize gerek yok). <strong>Kayıttan sonra bu alan hâlâ boşsa, müşteri bu ürünü sepete ekleyip ödemeye geçtiğinde hata alır</strong> — bu durumda elle doldurun ya da otomatik bağlantı ayarını kontrol edin.</p>
 
         <div class="form-row-3">
           <div class="form-group">
