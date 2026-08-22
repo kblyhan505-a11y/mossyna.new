@@ -25,8 +25,10 @@ gibi seyrek olan bir işlem için performans açısından önemsiz bir maliyetti
 
 NOT: "Client Credentials Grant" SADECE uygulama ile mağaza aynı Shopify
 hesabına/organizasyonuna aitse çalışır (bir tüccarın kendi mağazası için
-kendi oluşturduğu uygulama gibi — Mossyna'nın durumu tam olarak bu). Farklı
-hesaplara aitse Shopify bu isteği reddeder.
+kendi oluşturduğu uygulama gibi — Mossyna'nın durumu tam olarak bu). Ayrıca
+uygulamanın mağazaya GERÇEKTEN YÜKLENMİŞ olması gerekir (Dev Dashboard'da
+uygulamanın "Ana Sayfa" sekmesinden "Uygulamayı Yükle" ile yapılır) — sadece
+oluşturmak yetmez.
 
 Bu senkronizasyon İSTEĞE BAĞLIDIR: yapılandırma eksikse ya da Shopify
 tarafında herhangi bir sorun olursa (yanlış anahtar, geçici bağlantı sorunu,
@@ -175,10 +177,20 @@ def sync_product_to_shopify(product: models.Product) -> str | None:
     ):
         return None
 
+    # Shopify'ın güncel ürün modelinde her varyantın hangi "seçenek" değerine karşılık
+    # geldiğini belirtmesi ZORUNLU (optionValues alanı boş/null olamaz). Mossyna'da
+    # gerçek bir varyant seçimi (renk/beden gibi) olmadığı için Shopify'ın tek-varyantlı
+    # ürünler için kullandığı standart "Title" seçeneği + "Default Title" değeriyle
+    # tanımlıyoruz (bkz. shopify.dev OptionSetInput / VariantOptionValueInput).
     product_input = {
         "title": product.name_tr,
         "status": "ACTIVE" if product.is_active else "DRAFT",
-        "variants": [{"price": f"{float(product.price_try):.2f}", "sku": product.sku}],
+        "productOptions": [{"name": "Title", "values": [{"name": "Default Title"}]}],
+        "variants": [{
+            "price": f"{float(product.price_try):.2f}",
+            "sku": product.sku,
+            "optionValues": [{"optionName": "Title", "name": "Default Title"}],
+        }],
     }
     if product.short_desc_tr:
         product_input["descriptionHtml"] = product.short_desc_tr
