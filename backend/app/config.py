@@ -37,9 +37,9 @@ class Settings(BaseSettings):
     paytr_merchant_key: str = ""
     paytr_merchant_salt: str = ""
     paytr_test_mode: int = 1
-    paytr_success_url: str = "https://mossyna.com/checkout/success"
-    paytr_fail_url: str = "https://mossyna.com/checkout/failed"
-    paytr_notification_url: str = "https://api.mossyna.com/api/payments/webhook/paytr"
+    paytr_success_url: str = "https://mossyna.com.tr/checkout/success"
+    paytr_fail_url: str = "https://mossyna.com.tr/checkout/failed"
+    paytr_notification_url: str = "https://api.mossyna.com.tr/api/payments/webhook/paytr"
 
     # Stripe
     stripe_secret_key: str = ""
@@ -53,6 +53,17 @@ class Settings(BaseSettings):
     shopify_storefront_access_token: str = ""
     shopify_webhook_secret: str = ""
     shopify_api_version: str = "2026-07"
+    # Admin panelinden ürün eklerken/güncellerken Shopify tarafındaki karşılığını
+    # OTOMATİK oluşturup shopify_variant_id'yi kendisi doldurması için (bkz.
+    # app/services/shopify_admin_sync.py). Storefront token'dan FARKLI bir kimlik
+    # bilgisidir. Shopify Ocak 2026'dan itibaren sabit bir "Admin API access token"
+    # GÖSTERMİYOR — Dev Dashboard'daki uygulamanın "Uygulama ayarları" sayfasında bir
+    # İstemci kimliği (Client ID) ve Gizli anahtar (Client secret) veriyor, gerçek
+    # erişim anahtarını bu ikisinden arka planda kendimiz üretiyoruz. Boş bırakılırsa
+    # otomatik senkronizasyon sessizce devre dışı kalır, "Shopify Variant ID" alanı
+    # eskisi gibi elle doldurulabilir.
+    shopify_admin_client_id: str = ""
+    shopify_admin_client_secret: str = ""
 
     # Google ile Tek Tık Giriş (Google Identity Services — tarayıcıda üretilen
     # kimlik token'ı doğrudan Google'ın genel anahtarlarıyla doğrulanır; bu akışta
@@ -63,7 +74,7 @@ class Settings(BaseSettings):
 
     # Genel
     environment: str = "development"
-    frontend_base_url: str = "https://mossyna.com"
+    frontend_base_url: str = "https://mossyna.com.tr"
     media_root: str = "media"
 
     # Görsel Depolama ("local" = backend diski, sadece geliştirme; "s3" = Cloudflare
